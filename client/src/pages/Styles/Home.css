@@ -1,0 +1,20 @@
+/* Home Container */
+.home-container {
+    display: flex;
+    height: calc(100vh - 82px); /* Ajusta según la altura de la navbar */
+}
+
+/* Mapa */
+.map-container {
+    flex: 3; /* El mapa ocupará el 75% del ancho */
+    height: 100%; /* Esto asegurará que use el 100% de la altura del contenedor padre */
+}
+
+/* Lista de Apartamentos */
+.apartment-list-container {
+    flex: 1; /* El componente ApartmentList ocupará el 25% del ancho */
+    height: 100%; /* Esto asegurará que use el 100% de la altura del contenedor padre */
+    overflow-y: auto; /* Para hacer scroll si hay muchos apartamentos */
+    padding: 10px;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1); /* Sombra para separar visualmente */
+}

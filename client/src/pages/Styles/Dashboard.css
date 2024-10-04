@@ -1,0 +1,27 @@
+.dashboard-container {
+    display: flex;
+    justify-content: space-between; /* Distribuye los componentes a ambos lados */
+    width: 100vw; /* Asegura que ocupe el ancho completo de la pantalla */
+    height: calc(100vh - 82px); /* Asegura que ocupe toda la altura de la pantalla */
+    overflow-y: hidden;
+}
+
+.form-section {
+    width: 25%; /* Ocupa el 50% del ancho */
+    padding: 20px; /* Agrega algo de espacio interno */
+    box-sizing: border-box; /* Para que el padding no afecte el ancho total */
+    position: sticky; /* Hace que la sección del formulario se mantenga fija al desplazarse */
+    max-height: 100vh; /* Ajusta la altura máxima del formulario */
+    overflow-y: visible; /* Permite el scroll interno si el contenido del formulario es más largo */
+    background-color: #e0e0e0; /* Estilo del formulario */
+}
+
+.manage-section {
+    width: 75%; /* Ocupa el 50% del ancho */
+    padding: 20px; /* Agrega algo de espacio interno */
+    box-sizing: border-box; /* Para que el padding no afecte el ancho total */
+    background-color: #e0e0e0; /* Opcional, estilos diferentes para diferenciarlas */
+    overflow-y: auto; /* Permite el scroll interno si el contenido es más largo */
+    height: 100vh; /* Asegura que ocupe toda la altura disponible */
+    overflow-x: visible;
+}

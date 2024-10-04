@@ -1,0 +1,69 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f0f8ff; /* Color de fondo suave */
+    position: relative; /* Necesario para posicionar el icono de cerrar */
+}
+
+.exit-icon {
+    position: absolute; /* Posición en la esquina superior derecha */
+    top: 20px;
+    right: 20px;
+    cursor: pointer; /* Cambia el cursor al pasar el mouse */
+    font-size: 24px; /* Tamaño del icono */
+    color: #ff4d4d; /* Color del icono */
+}
+
+.div-container {
+    background-color: #ffffff; /* Fondo blanco para el formulario */
+    padding: 40px;
+    border-radius: 10px; /* Bordes redondeados */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Sombra */
+    width: 300px; /* Ancho del contenedor */
+    text-align: center; /* Centra el texto */
+}
+
+.title h2 {
+    color: #333; /* Color del título */
+    margin-bottom: 20px; /* Espacio inferior */
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column; /* Coloca los inputs en columna */
+}
+
+input {
+    width: 100%;
+    padding: 10px; /* Espaciado interno */
+    margin: 10px 0; /* Margen superior e inferior unificado */
+    border: 1px solid #ccc; /* Borde gris */
+    border-radius: 5px; /* Bordes redondeados */
+    font-size: 16px; /* Tamaño de fuente */
+    box-sizing: border-box; /* Incluye padding y border en el ancho total */
+}
+
+button {
+    width: 100%; /* Asegura que el botón ocupe el mismo ancho que los inputs */
+    background-color: #4CAF50; /* Color de fondo del botón */
+    color: white; /* Color del texto */
+    border: none; /* Sin borde */
+    border-radius: 5px; /* Bordes redondeados */
+    padding: 10px; /* Espaciado interno */
+    font-size: 16px; /* Tamaño de fuente */
+    cursor: pointer; /* Cambia el cursor al pasar el mouse */
+    margin-top: 10px; /* Margen superior */
+    transition: background-color 0.3s ease; /* Transición al hacer hover */
+}
+
+button:hover {
+    background-color: #45a049; /* Color de fondo al hacer hover */
+}
+
+.message {
+    color: green; /* Color del mensaje */
+    margin-top: 10px; /* Margen superior */
+}

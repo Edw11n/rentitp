@@ -1,0 +1,81 @@
+.account {
+    position: fixed; /* Fija el componente en la pantalla */
+    top: 50%; /* Centra verticalmente */
+    right: 10px; /* Mantiene a la derecha */
+    transform: translateY(-50%); /* Ajusta la posición para centrarlo exactamente */
+    background-color: white;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border-radius: 8px;
+    z-index: 1000; /* Asegura que se superponga sobre otros elementos */
+    width: 300px; /* Un ancho fijo para mantener un diseño compacto */
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.account-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Espaciado entre los elementos */
+}
+
+h2 {
+    color: #333; /* Color del título */
+    margin-bottom: 20px; /* Espacio inferior */
+    text-align: center; /* Centrar el título */
+}
+
+.role {
+    font-weight: bold; /* Negrita para el rol */
+    color: #555; /* Color gris para el rol */
+    margin-bottom: 15px; /* Margen inferior */
+    text-align: center; /* Centrar el texto */
+}
+
+.go-to-dashboard {
+    color: #007bff; /* Color del enlace */
+    cursor: pointer; /* Cambia el cursor al pasar el mouse */
+    margin-bottom: 15px; /* Margen inferior */
+    text-align: center; /* Centrar el texto */
+}
+
+.go-to-dashboard:hover {
+    text-decoration: underline; /* Subrayar al pasar el mouse */
+}
+
+.user-info {
+    margin-bottom: 20px; /* Margen inferior */
+}
+
+strong {
+    color: #333; /* Color del texto fuerte */
+}
+
+.logout-button {
+    background-color: #ff4d4d; /* Color de fondo rojo para el botón */
+    color: white; /* Color del texto */
+    border: none; /* Sin borde */
+    border-radius: 5px; /* Bordes redondeados */
+    padding: 10px; /* Espaciado interno */
+    font-size: 16px; /* Tamaño de fuente */
+    cursor: pointer; /* Cambia el cursor al pasar el mouse */
+    transition: background-color 0.3s ease; /* Transición al hacer hover */
+    width: 100%; /* Ancho completo del botón */
+}
+
+.logout-button:hover {
+    background-color: #ff1a1a; /* Color de fondo al hacer hover */
+}
+
+button {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #e74c3c; /* Color de fondo para el botón de cerrar sesión */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #c0392b; /* Color más oscuro cuando se pasa el mouse */
+}

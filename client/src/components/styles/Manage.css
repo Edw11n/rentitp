@@ -1,0 +1,132 @@
+.manage-container {
+    padding: 20px;
+    background-color: #f9f9f9;
+    overflow-y: scroll;
+    height: 100%;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.apartment-list {
+    display: flex;
+    flex-wrap: wrap; /* Permite que los apartamentos se ajusten a la siguiente línea */
+    gap: 20px; /* Espacio entre los apartamentos */
+    margin-bottom: 50px;
+}
+
+.apartment-item {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    width: 48%; /* Cada apartamento ocupa la mitad del ancho */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box; /* Asegura que el padding y border no afecten el ancho total */
+}
+
+.apartment-details {
+    margin-bottom: 15px; /* Espacio entre los detalles y los botones */
+    overflow-wrap: break-word;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: space-between; /* Espacio entre los botones */
+}
+
+.edit-btn,
+.delete-btn {
+    margin-top: 5px;
+    padding: 5px 5px; /* Tamaño más pequeño para los botones */
+    font-size: 14px; /* Tamaño de fuente más pequeño */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 30%;
+    justify-content: space-between;
+}
+
+.edit-btn {
+    background-color: #007bff;
+    color: white;
+    width: 48%;
+}
+
+.delete-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+.edit-btn:hover {
+    background-color: #0056b3; /* Color más oscuro al pasar el ratón */
+}
+
+.delete-btn:hover {
+    background-color: #c82333; /* Color más oscuro al pasar el ratón */
+}
+
+/* Estilo para el formulario de edición */
+.edit-apartment-form {
+    display: flex;
+    flex-direction: column;
+    margin: 10px 0; /* Espaciado entre apartamentos */
+    padding: 10px;
+    border: 1px solid #ccc; /* Opcional: un borde para diferenciar el formulario */
+    border-radius: 5px; /* Opcional: bordes redondeados */
+}
+.edit-apartment-form input,
+.edit-apartment-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px; /* Espaciado entre los campos de entrada */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: none;
+    box-sizing: border-box;
+}
+
+.update-btn, .cancel-btn {
+    width: 45%;
+    padding: 10px;
+    background-color: #28a745; /* Color verde para el botón de actualización */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.update-btn:hover {
+    background-color: #218838; /* Color más oscuro al pasar el ratón */
+}
+.edit-buttons {
+    display: flex;
+    justify-content: space-between; /* Espacio entre los botones */
+    margin-top: 10px; /* Espaciado entre el formulario y los botones */
+}
+
+.cancel-btn {
+    background-color: #6c757d; /* Color gris para el botón de cancelar */
+}
+
+.cancel-btn:hover {
+    background-color: #5a6268; /* Color más oscuro al pasar el ratón */
+}
+.refresh-btn {
+    margin-bottom: 20px;
+    padding: 10px 15px;
+    background-color: #4CAF50; /* Verde */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.refresh-btn:hover {
+    background-color: #45a049; /* Verde más oscuro */
+}

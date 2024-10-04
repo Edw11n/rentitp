@@ -1,0 +1,38 @@
+/* Estilo para el contenedor del mapa */
+.map-container {
+    position: relative; /* Para posicionar correctamente el mapa dentro del contenedor */
+    width: 100%; /* Asegura que el contenedor ocupe el 100% de ancho */
+    height: 100%; /* Asegura que el contenedor ocupe el 100% de altura */
+    overflow: hidden; /* Evita que se muestren barras de desplazamiento */
+}
+
+/* Estilo para el mapa de Leaflet */
+.leaflet-container {
+    height: 100%; /* Asegura que el mapa ocupe el 100% de la altura del contenedor */
+    width: 100%; /* Asegura que el mapa ocupe el 100% de la anchura del contenedor */
+}
+
+/* Personalización del marcador si es necesario */
+.leaflet-marker-icon {
+    width: 25px; /* Ajusta el tamaño del ícono del marcador */
+    height: 41px; /* Ajusta el tamaño del ícono del marcador */
+}
+
+/* Estilo para el popup del marcador */
+.leaflet-popup {
+    max-width: 200px; /* Limita el ancho máximo del popup */
+    background-color: #fff; /* Fondo blanco para el popup */
+    border-radius: 5px; /* Bordes redondeados */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Sombra para el popup */
+}
+
+/* Estilo de la cabecera del popup */
+.leaflet-popup-content {
+    font-size: 14px; /* Tamaño del texto en el popup */
+    color: #333; /* Color del texto */
+}
+
+/* Estilo para el texto dentro del popup */
+.leaflet-popup-content p {
+    margin: 0; /* Elimina márgenes del párrafo */
+}

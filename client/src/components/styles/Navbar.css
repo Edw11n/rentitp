@@ -1,0 +1,48 @@
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #4CAF50; /* Color de fondo */
+    padding: 5px 30px; /* Espaciado interno */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra */
+    color: white; /* Color del texto */
+    position: relative;
+}
+
+.title {
+    font-size: 24px; /* Tamaño del texto del título */
+    cursor: pointer; /* Cambia el cursor al pasar el mouse */
+    transition: color 0.3s ease; /* Efecto de transición */
+}
+
+.title:hover {
+    cursor: pointer !important; /* Cambia el cursor al pasar el mouse */
+    color: #e0e0e0; /* Color del texto al pasar el mouse */
+}
+
+.navbar-join {
+    cursor: pointer; /* Cambia el cursor al pasar el mouse */
+}
+
+.navbar-join-click {
+    font-size: 18px; /* Tamaño del texto */
+    text-decoration: underline; /* Subrayado */
+    transition: color 0.3s ease; /* Efecto de transición */
+}
+
+.navbar-join-click:hover {
+    color: #e0e0e0; /* Color del texto al pasar el mouse */
+}
+
+.dash {
+    cursor: pointer; /* Cambia el cursor al pasar el mouse */
+}
+
+.dash:hover {
+    opacity: 0.8; /* Efecto de opacidad al pasar el mouse */
+}
+
+.dash svg {
+    font-size: 20px; /* Tamaño del icono */
+    color: white; /* Color del icono */
+}
