@@ -9,6 +9,7 @@ import Navbar from './components/Navbar';
 import Account from './components/Account';
 import Join from './components/Join';
 import ProtectedRoute from './ProtectedRoute';
+import './App.css'
 
 function App() {
   const [showJoin, setShowJoin] = useState(false);
@@ -19,7 +20,7 @@ function App() {
       <Navbar 
                 goToJoin={() => setShowJoin(true)}
                 showAccount={showAccount}
-                setShowAccount={setShowAccount} // Añadir esto
+                setShowAccount={setShowAccount} 
             />
         {showJoin && <Join onClose={() => setShowJoin(false)} />}
         {showAccount && <Account onClose={() => setShowAccount(false)} />}
@@ -27,7 +28,7 @@ function App() {
           <Route path='/' element={<Home />} />
           <Route path='/signup' element={<Signup />} />
           <Route path='/login' element={<Login />} />
-          <Route path='/dashboard' element={<Dashboard />} />
+          <Route path='/dashboard' element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         </Routes>
       </Router>
     </UserProvider>

@@ -14,7 +14,10 @@
     right: 20px;
     cursor: pointer; /* Cambia el cursor al pasar el mouse */
     font-size: 24px; /* Tamaño del icono */
-    color: #ff4d4d; /* Color del icono */
+    color: black; /* Color del icono */
+}
+.exit-icon:hover {
+    color: red;
 }
 
 .div-container {
@@ -41,7 +44,7 @@ input {
     padding: 10px; /* Espaciado interno */
     margin: 10px 0; /* Margen superior e inferior unificado */
     border: 1px solid #ccc; /* Borde gris */
-    border-radius: 5px; /* Bordes redondeados */
+    border-radius: 25px; /* Bordes redondeados */
     font-size: 16px; /* Tamaño de fuente */
     box-sizing: border-box; /* Incluye padding y border en el ancho total */
 }
@@ -51,7 +54,7 @@ button {
     background-color: #4CAF50; /* Color de fondo del botón */
     color: white; /* Color del texto */
     border: none; /* Sin borde */
-    border-radius: 5px; /* Bordes redondeados */
+    border-radius: 25px; /* Bordes redondeados */
     padding: 10px; /* Espaciado interno */
     font-size: 16px; /* Tamaño de fuente */
     cursor: pointer; /* Cambia el cursor al pasar el mouse */

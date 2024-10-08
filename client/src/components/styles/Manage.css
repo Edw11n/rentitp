@@ -54,7 +54,6 @@ h2 {
 .edit-btn {
     background-color: #007bff;
     color: white;
-    width: 48%;
 }
 
 .delete-btn {
@@ -88,6 +87,7 @@ h2 {
     border-radius: 4px;
     resize: none;
     box-sizing: border-box;
+    font-size: 16px;
 }
 
 .update-btn, .cancel-btn {

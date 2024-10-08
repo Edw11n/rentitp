@@ -27,9 +27,12 @@
     right: 10px;
     cursor: pointer; /* Cambia el cursor al pasar el mouse */
     font-size: 20px; /* Tamaño del icono */
-    color: #ff4d4d; /* Color del icono */
+    color: black; /* Color del icono */
+    
 }
-
+.close-icon:hover {
+    color: red;
+}
 .join-options-content {
     margin-top: 20px; /* Espacio entre el icono de cerrar y las opciones */
 }
@@ -44,7 +47,7 @@
     background-color: #4CAF50; /* Color de fondo de los botones */
     color: white; /* Color del texto de los botones */
     border: none;
-    border-radius: 5px; /* Bordes redondeados para los botones */
+    border-radius: 25px; /* Bordes redondeados para los botones */
     padding: 10px 15px; /* Espaciado interno */
     font-size: 16px; /* Tamaño de fuente */
     cursor: pointer; /* Cambia el cursor al pasar el mouse */

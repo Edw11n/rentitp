@@ -116,18 +116,18 @@ function Manage() {
                     <div className="edit-apartment-form">
                       <input 
                         type="text" 
-                        name="direccion_apartamento" 
-                        value={editFormData.direccion_apartamento} 
-                        onChange={handleInputChange} 
-                        placeholder="Dirección" 
-                      />
-                      <input 
-                        type="text" 
                         name="barrio_apartamento" 
                         value={editFormData.barrio_apartamento} 
                         onChange={handleInputChange} 
                         placeholder="Barrio" 
                       />
+                      <input 
+                        type="text" 
+                        name="direccion_apartamento" 
+                        value={editFormData.direccion_apartamento} 
+                        onChange={handleInputChange} 
+                        placeholder="Dirección" 
+                      /> 
                       <input 
                         type="text" 
                         name="latitud_apartamento" 
@@ -157,8 +157,8 @@ function Manage() {
                   ) : (
                     <>
                       <div className="apartment-details">
-                        <p><strong>Dirección:</strong> {apartment.direccion_apartamento}</p>
                         <p><strong>Barrio:</strong> {apartment.barrio_apartamento}</p>
+                        <p><strong>Dirección:</strong> {apartment.direccion_apartamento}</p>
                         <p><strong>Latitud:</strong> {apartment.latitud_apartamento}</p>
                         <p><strong>Longitud:</strong> {apartment.longitud_apartamento}</p>
                         <p><strong>Información adicional:</strong> {apartment.info_adicional_apartamento}</p>

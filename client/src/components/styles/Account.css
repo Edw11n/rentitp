@@ -54,7 +54,7 @@ strong {
     background-color: #ff4d4d; /* Color de fondo rojo para el botón */
     color: white; /* Color del texto */
     border: none; /* Sin borde */
-    border-radius: 5px; /* Bordes redondeados */
+    border-radius: 25px; /* Bordes redondeados */
     padding: 10px; /* Espaciado interno */
     font-size: 16px; /* Tamaño de fuente */
     cursor: pointer; /* Cambia el cursor al pasar el mouse */
@@ -66,16 +66,43 @@ strong {
     background-color: #ff1a1a; /* Color de fondo al hacer hover */
 }
 
-button {
+.confirm-logout-dialog {
     margin-top: 20px;
-    padding: 10px;
-    background-color: #e74c3c; /* Color de fondo para el botón de cerrar sesión */
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border: 1px solid #ced4da;
+    border-radius: 25px;
+    text-align: center;
 }
 
-button:hover {
-    background-color: #c0392b; /* Color más oscuro cuando se pasa el mouse */
+.confirm-logout-actions {
+    margin-top: 10px;
+    display: flex; /* Alineación en fila */
+    justify-content: space-between; /* Separar los botones */
+}
+
+.logout-confirm-btn, .logout-cancel-btn {
+    padding: 8px 12px;
+    cursor: pointer;
+    border: none;
+    border-radius: 25px;
+    width: 45%; /* Asegura que los botones ocupen el 45% del contenedor */
+}
+
+.logout-confirm-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+.logout-confirm-btn:hover {
+    background-color: #c82333; /* Oscurecer en hover */
+}
+
+.logout-cancel-btn {
+    background-color: #6c757d;
+    color: white;
+}
+
+.logout-cancel-btn:hover {
+    background-color: #5a6268; /* Oscurecer en hover */
 }

@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import Axios from "axios";
+import SucessModal from '../components/SucessModal'
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
-import './Styles/log.css'; // Asegúrate de que la ruta a tu archivo CSS sea correcta
+import './Styles/log.css'; 
 
 function Signup() {
   const [nombre, setNombre] = useState("");
@@ -13,6 +14,7 @@ function Signup() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [mensaje, setMensaje] = useState("");
+  const [showSucess, setShowSucess] = useState(false);
   const [error, setError] = useState(false);
   const navigate = useNavigate();
 
@@ -33,12 +35,16 @@ function Signup() {
         telefono,
         password,
       });
-      navigate("/"); // Redirigir a la página de inicio
+      setShowSucess(true);
     } catch (error) {
       setMensaje("Hubo un error registrando los datos");
       console.error(error);
     }
   };
+  const handleSucessClose = () => {
+    setShowSucess(false);
+    navigate('/login');
+  }
 
   return (
     <div className="container">
@@ -91,7 +97,9 @@ function Signup() {
           />
           <button onClick={handleSubmit}>Registrarse</button>
           {error && <p style={{ color: 'red' }}>{mensaje}</p>}
-        {mensaje && <p className="message">{mensaje}</p>}
+        <div>
+          {showSucess && <SucessModal message={'Registro Exitoso.'} goToLogin={handleSucessClose} />}
+        </div>
       </div>
     </div>
   );
