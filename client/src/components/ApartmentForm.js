@@ -7,7 +7,6 @@ import '../styles/apartments.css';
 
     function ApartmentForm() {
     const { user } = useContext(UserContext);
-    const [controller] = useState(new ApartmentFormController(user));
     const [barrio, setBarrio] = useState('');
     const [direccion, setDireccion] = useState('');
     const [latitud, setLatitud] = useState('');
@@ -54,18 +53,19 @@ import '../styles/apartments.css';
         });
 
         try {
-        const successMessage = await controller.submitApartment(formData);
-        setMessage(successMessage);
-        // Limpiar formulario
-        setBarrio('');
-        setDireccion('');
-        setLatitud('');
-        setLongitud('');
-        setAddInfo('');
-        setCharCount(0);
-        setImageFiles([]);
+            const controller = new ApartmentFormController(user);
+            const successMessage = await controller.submitApartment(formData);
+                setMessage(successMessage);
+            // Limpiar formulario
+                setBarrio('');
+                setDireccion('');
+                setLatitud('');
+                setLongitud('');
+                setAddInfo('');
+                setCharCount(0);
+                setImageFiles([]);
         } catch (error) {
-        setMessage(error.message);
+            setMessage(error.message);
         }
     };
 

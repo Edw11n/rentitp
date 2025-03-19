@@ -3,25 +3,38 @@ const path = require('path');
 const sanitize = require('sanitize-filename');
 const { fileTypeFromBuffer } = require('file-type');
 const fs = require('fs/promises');
+const sharp = require('sharp');
 require('dotenv').config();
 
-// Configuración de Multer
+// Configuración de almacenamiento dinámico por usuario
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads/');
+    destination: async (req, file, cb) => {
+        try {
+            // Obtener ID de usuario (asumiendo que viene en el token JWT)
+            const userId = req.user?.id || 'temp';
+            const userDir = path.join('uploads', `user_${userId}`);
+            
+            // Crear directorio si no existe
+            await fs.mkdir(userDir, { recursive: true });
+            cb(null, userDir);
+        } catch (error) {
+            cb(error);
+        }
     },
     filename: (req, file, cb) => {
-        const sanitizedName = sanitize(file.originalname);
-        const uniquePrefix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        const extension = path.extname(sanitizedName);
-        cb(null, `${uniquePrefix}${extension}`);
+        const uniqueName = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, `${uniqueName}.webp`); // Todos los archivos de imagen tendrán extensión .webp
     }
 });
 
-// Validación de tipos MIME
+// Tipos MIME permitidos (solo imágenes)
+const defaultMimes = ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'];
 const allowedMimes = new Set(
-    (process.env.ALLOWED_MIMES || 'image/jpeg,image/png,image/webp,image/jpg').split(',')
+    process.env.ALLOWED_MIMES
+        ? process.env.ALLOWED_MIMES.split(',').map(mime => mime.trim())
+        : defaultMimes
 );
+
 
 const fileFilter = (req, file, cb) => {
     if (!allowedMimes.has(file.mimetype)) {
@@ -30,37 +43,53 @@ const fileFilter = (req, file, cb) => {
     cb(null, true);
 };
 
-// Configuración de Multer exportable
 exports.upload = multer({
     storage,
     fileFilter,
     limits: {
-        fileSize: process.env.MAX_FILE_SIZE || 5 * 1024 * 1024,
+        fileSize: process.env.MAX_FILE_SIZE || 10 * 1024 * 1024, // 10MB
         files: process.env.MAX_FILES || 10
-    }    
+    }
 });
 
-// Middleware de validación avanzada
 exports.validateFiles = async (req, res, next) => {
-    if (!req.files || req.files.length === 0) return next();
+    if (!req.files?.length) return next();
     
     try {
         for (const file of req.files) {
-            const buffer = await fs.readFile(file.path, { length: 4100 });
+            // Leer el archivo temporal
+            const buffer = await fs.readFile(file.path);
             const type = await fileTypeFromBuffer(buffer);
             
+            // Validación de tipo real
             if (!type || !allowedMimes.has(type.mime)) {
                 await fs.unlink(file.path);
-                throw new Error(`Archivo inválido: ${file.originalname}`);
+                throw new Error(`Tipo de archivo no permitido: ${file.originalname}`);
             }
-            
-            const newPath = `${file.path}.${type.ext}`;
-            await fs.rename(file.path, newPath);
-            file.path = newPath;
+
+            // Procesar imágenes
+            if (type.mime.startsWith('image/')) {
+                await sharp(buffer)
+                    .resize({
+                        width: 1920,
+                        height: 1080,
+                        fit: 'inside',
+                        withoutEnlargement: true
+                    })
+                    .webp({ 
+                        quality: 80,
+                        lossless: false,
+                        alphaQuality: 100
+                    })
+                    .toFile(file.path); // Sobrescribe el archivo temporal con la versión optimizada
+            }
         }
         next();
     } catch (error) {
-        await Promise.all(req.files.map(file => fs.unlink(file.path)));
+        // Limpiar archivos subidos en caso de error
+        await Promise.all(req.files.map(file => 
+            fs.unlink(file.path).catch(() => {})
+        ));
         next(error);
     }
 };

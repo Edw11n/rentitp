@@ -21,6 +21,7 @@ class ApartmentFormController {
             await Axios.post(`${API_URL}/apartments/addApartment`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
+                    'Authorization': `Bearer ${this.user.token}`,
                 },
             });
             return 'Apartamento añadido exitosamente';

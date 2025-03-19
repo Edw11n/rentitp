@@ -24,7 +24,11 @@ const fetchApartments = () => {
     return;
     }
     setLoading(true);
-    Axios.get(`${API_URL}/apartments/manage?id=${user.id}`)
+    Axios.get(`${API_URL}/apartments/manage`, {
+        headers: {
+            "Authorization": `Bearer ${user.token}`
+        }
+    })
     .then((response) => {
         setApartmentList(response.data);
     })
@@ -56,7 +60,11 @@ const handleInputChange = (e) => {
 
 const handleDelete = (id_apt) => {
     if (window.confirm("¿Estás seguro de que deseas eliminar este apartamento?")) {
-    Axios.delete(`${API_URL}/apartments/delete/${id_apt}`)
+    Axios.delete(`${API_URL}/apartments/delete/${id_apt}`, {
+        headers: {
+        "Authorization": `Bearer ${user.token}`
+        }
+    })
         .then(() => {
         alert("Apartamento eliminado exitosamente");
         setApartmentList((prevList) =>
@@ -107,7 +115,11 @@ const handleUpdate = (id_apt, newImageFiles = []) => {
     });
 
     Axios.put(`${API_URL}/apartments/update/${id_apt}`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: { 
+            "Content-Type": "multipart/form-data", 
+            "Authorization": `Bearer ${user.token}`
+        },
+
     })
         .then(() => {
             alert("Apartamento actualizado exitosamente");

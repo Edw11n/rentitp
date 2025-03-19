@@ -14,11 +14,23 @@ app.use(cors({
     origin: process.env.ALLOWED_ORIGINS?.split(',') || '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
+    exposedHeaders: ['Content-Disposition'],
     credentials: true
 }));
 
 // Middlewares de seguridad
-app.use(helmet());
+app.use(
+    helmet({
+        contentSecurityPolicy: {
+            directives: {
+                defaultSrc: ["'self'"],
+                imgSrc: ["'self'", "data:"], // 🔥 Permite imágenes desde tu servidor y datos en base64
+                scriptSrc: ["'self'"],
+                objectSrc: ["'none'"],
+            },
+        },
+    })
+);
 app.use(express.json({ limit: '10mb' }));  // Aumentar límite para posibles imágenes en base64
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
@@ -27,6 +39,9 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
     setHeaders: (res) => {
         res.set('X-Content-Type-Options', 'nosniff');
         res.set('Content-Security-Policy', "default-src 'self'");
+        res.set('Access-Control-Allow-Origin', '*');
+        res.set('Access-Control-Allow-Methods', 'GET, OPTIONS');
+        res.set('Cross-Origin-Resource-Policy', 'cross-origin');
     }
 }));
 
