@@ -1,6 +1,5 @@
 const multer = require('multer');
 const path = require('path');
-const sanitize = require('sanitize-filename');
 const { fileTypeFromBuffer } = require('file-type');
 const fs = require('fs/promises');
 const sharp = require('sharp');
@@ -27,7 +26,7 @@ const storage = multer.diskStorage({
     }
 });
 
-// Tipos MIME permitidos (solo imágenes)
+// Tipos MIME permitidos
 const defaultMimes = ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'];
 const allowedMimes = new Set(
     process.env.ALLOWED_MIMES
@@ -47,7 +46,7 @@ exports.upload = multer({
     storage,
     fileFilter,
     limits: {
-        fileSize: process.env.MAX_FILE_SIZE || 10 * 1024 * 1024, // 10MB
+        fileSize: process.env.MAX_FILE_SIZE || 10 * 1024 * 1024,
         files: process.env.MAX_FILES || 10
     }
 });
