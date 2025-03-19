@@ -1,5 +1,4 @@
-// middlewares/authMiddleware.js
-const { verifyToken } = require('../utils/auth'); // Asume que tienes un utils/auth.js
+const { verifyToken } = require('../utils/auth'); 
 
 module.exports = async (req, res, next) => {
     try {
