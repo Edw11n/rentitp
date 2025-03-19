@@ -1,0 +1,89 @@
+.navbar {
+    background: linear-gradient(135deg, #4F46E5 0%, #818CF8 100%);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.title {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: -0.5px;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+.title:hover {
+    transform: translateY(-1px);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-join-click {
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.navbar-join-click:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+}
+
+.dash {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.dash svg {
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.8rem;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.dash svg:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+}
+
+/* Efecto glassmorphism para móviles */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 1rem;
+    }
+    
+    .title {
+        font-size: 1.2rem;
+    }
+    
+    .navbar-join-click {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .dash svg {
+        font-size: 1.2rem;
+        padding: 0.6rem;
+    }
+}

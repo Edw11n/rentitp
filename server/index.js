@@ -1,0 +1,62 @@
+const express = require('express');
+const cors = require('cors');
+const lessorRoutes = require('./routes/lessorRoutes');
+const apartmentRoutes = require('./routes/apartmentRoutes');
+const DocumentRoutes = require('./routes/DocumentRoutes');
+const path = require('path');
+const helmet = require('helmet');
+require('dotenv').config();
+
+const app = express();
+
+// Configuración mejorada de CORS
+app.use(cors({
+    origin: process.env.ALLOWED_ORIGINS?.split(',') || '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+}));
+
+// Middlewares de seguridad
+app.use(helmet());
+app.use(express.json({ limit: '10mb' }));  // Aumentar límite para posibles imágenes en base64
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Servir archivos estáticos con cabeceras de seguridad
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
+    setHeaders: (res) => {
+        res.set('X-Content-Type-Options', 'nosniff');
+        res.set('Content-Security-Policy', "default-src 'self'");
+    }
+}));
+
+// Middleware de registro de solicitudes (opcional pero útil)
+app.use((req, _, next) => {
+    console.log(`${req.method} ${req.path}`);
+    next();
+});
+
+// Rutas principales
+app.use('/lessors', lessorRoutes);
+app.use('/apartments', apartmentRoutes);
+app.use('/documents', DocumentRoutes);
+
+// Manejador para rutas no encontradas
+app.use((_, res) => {
+    res.status(404).json({ error: 'Endpoint no encontrado' });
+});
+
+// Manejador centralizado de errores
+app.use((err, _, res, __) => {
+    console.error('Error global:', err);
+    res.status(500).json({ 
+        error: 'Error interno del servidor',
+        ...(process.env.NODE_ENV === 'development' && { details: err.message })
+    });
+});
+
+const port = process.env.SERVER_PORT || 3000;
+app.listen(port, () => {
+    console.log(`🛠️ Servidor en ejecución en: http://localhost:${port}`);
+    console.log(`⚙️ Entorno: ${process.env.NODE_ENV || 'development'}`);
+});
