@@ -11,9 +11,9 @@ export const UserProvider = ({ children }) => {
         return storedUser ? JSON.parse(storedUser) : null;
     });
 
-    const login = (userData) => {
+    const login = ({ id, nombre, apellido, email, telefono, rol, token }) => {
+        const userData = { id, nombre, apellido, email, telefono, rol, token };
         setUser(userData);
-        // Guardar en localStorage para persistencia
         localStorage.setItem('user', JSON.stringify(userData));
     };
 
@@ -22,7 +22,6 @@ export const UserProvider = ({ children }) => {
         localStorage.removeItem('user');
     };
 
-    // Opcional: actualizar localStorage si el user cambia
     useEffect(() => {
         if (user) {
             localStorage.setItem('user', JSON.stringify(user));

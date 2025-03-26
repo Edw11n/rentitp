@@ -4,12 +4,11 @@ const { generateToken } = require('../utils/auth');
 require('dotenv').config();
 
 // Controlador para registrar un nuevo usuario
-// Controlador para registrar un nuevo usuario (signup)
 exports.signup = async (req, res) => {
     try {
         const { nombre, apellido, email, telefono, password, rolId } = req.body;
         
-        // Validación mejorada...
+        // Validación de campos
         const requiredFields = ['nombre', 'apellido', 'email', 'telefono', 'password', 'rolId'];
         const missingFields = requiredFields.filter(field => !req.body[field]);
         
@@ -20,7 +19,7 @@ exports.signup = async (req, res) => {
             });
         }
 
-        // Validar formato de email...
+        // Validar formato de email
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
             return res.status(400).json({ error: 'Formato de email inválido' });
@@ -32,17 +31,20 @@ exports.signup = async (req, res) => {
             return res.status(409).json({ error: 'El usuario ya está registrado' });
         }
 
-        // Crear usuario sin hashear la contraseña aquí; el modelo se encargará de ello
+        // Hashear la contraseña antes de guardarla
+        const hashedPassword = await bcrypt.hash(password, 10);
+        
+        // Crear usuario
         const newUser = await Lessor.signup({
             nombre,
             apellido,
             email,
             telefono,
-            password, // Enviar contraseña en texto plano
+            password: hashedPassword,
             rolId
         });
 
-        // Generar token JWT...
+        // Generar token JWT
         const token = generateToken({
             id: newUser.user_id,
             rol: newUser.rol_id
@@ -60,13 +62,9 @@ exports.signup = async (req, res) => {
 
     } catch (error) {
         console.error('Error en registro:', error);
-        res.status(500).json({
-            error: 'Error en el servidor',
-            ...(process.env.NODE_ENV === 'development' && { details: error.message })
-        });
+        res.status(500).json({ error: 'Error en el servidor' });
     }
 };
-
 
 // Controlador para iniciar sesión
 exports.login = async (req, res) => {
@@ -82,6 +80,12 @@ exports.login = async (req, res) => {
         if (!user) {
             return res.status(401).json({ error: 'Usuario no encontrado' });
         }
+
+        // Verificar si el usuario usa Google OAuth
+        if (!user.user_password) {
+            return res.status(400).json({ error: 'Este usuario usa Google OAuth, inicie sesión con Google' });
+        }
+
         // Verificar contraseña
         const validPassword = await bcrypt.compare(password, user.user_password);
         if (!validPassword) {
@@ -109,12 +113,8 @@ exports.login = async (req, res) => {
             user: userData,
             token
         });
-
     } catch (error) {
         console.error('Error en login:', error);
-        res.status(500).json({
-            error: 'Error en el servidor',
-            ...(process.env.NODE_ENV === 'development' && { details: error.message })
-        });
+        res.status(500).json({ error: 'Error en el servidor' });
     }
 };

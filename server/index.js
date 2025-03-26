@@ -3,20 +3,33 @@ const cors = require('cors');
 const lessorRoutes = require('./routes/lessorRoutes');
 const apartmentRoutes = require('./routes/apartmentRoutes');
 const DocumentRoutes = require('./routes/DocumentRoutes');
+const authRoutes = require('./routes/auth');
 const path = require('path');
 const helmet = require('helmet');
+const session = require('express-session');
+const passport = require('./utils/passport');
 require('dotenv').config();
 
 const app = express();
 
 // Configuración mejorada de CORS
 app.use(cors({
-    origin: process.env.ALLOWED_ORIGINS?.split(',') || '*',
+    origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     exposedHeaders: ['Content-Disposition'],
     credentials: true
 }));
+//Middleware de sesión
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true
+}));
+// Middleware de Passport
+app.use(passport.initialize());
+app.use(passport.session());    
+app.use(express.json());
 
 // Middlewares de seguridad
 app.use(
@@ -55,6 +68,7 @@ app.use((req, _, next) => {
 app.use('/lessors', lessorRoutes);
 app.use('/apartments', apartmentRoutes);
 app.use('/documents', DocumentRoutes);
+app.use('/auth', authRoutes);
 
 // Manejador para rutas no encontradas
 app.use((_, res) => {
@@ -70,7 +84,7 @@ app.use((err, _, res, __) => {
     });
 });
 
-const port = process.env.SERVER_PORT || 3000;
+const port = process.env.SERVER_PORT || 3001;
 app.listen(port, () => {
     console.log(`🛠️ Servidor en ejecución en: http://localhost:${port}`);
     console.log(`⚙️ Entorno: ${process.env.NODE_ENV || 'development'}`);

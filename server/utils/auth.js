@@ -14,7 +14,12 @@ const generateRefreshToken = (payload) => {
 };
 
 const verifyToken = (token, secret = process.env.JWT_SECRET) => {
-    return jwt.verify(token, secret);
+    try {
+        return jwt.verify(token, secret);
+    } catch (error) {
+        console.error('Error verificando token:', error);
+        return null; // Evita que falle si el token es inválido
+    }
 };
 
 module.exports = { generateToken, generateRefreshToken, verifyToken };

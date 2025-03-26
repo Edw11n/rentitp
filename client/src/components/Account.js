@@ -32,14 +32,13 @@ function Account({ onClose }) {
     }
 
     // Determinar el nombre del rol basado en rolId
-    const roleName = user.rolId === 1 ? "USUARIO" : user.rolId === 2 ? "ARRENDADOR" : "DESCONOCIDO";
+    const roleName = user.rol === 1 ? "USUARIO" : user.rol === 2 ? "ARRENDADOR" : "DESCONOCIDO";
 
     const handleOutsideClick = (event) => {
         if (event.target.classList.contains("account")) {
             onClose();
         }
     };
-
     return (
         <div className="account" onClick={handleOutsideClick}>
             <div className="account-container">
@@ -47,7 +46,7 @@ function Account({ onClose }) {
                 <p className="role"><strong>Rol:</strong> {roleName}</p>
 
                 {/* Mostrar el enlace al panel de gestión solo si rolId es 2 */}
-                {user.rolId === 2 && (
+                {user.rol === 2 && (
                     <p className='go-to-dashboard' onClick={goToDashboard}>Panel de gestión</p>
                 )}
 

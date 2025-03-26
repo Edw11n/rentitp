@@ -10,6 +10,7 @@ import Navbar from './components/Navbar';
 import Account from './components/Account';
 import Join from './components/Join';
 import ProtectedRoute from './contexts/ProtectedRoute';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import './App.css';
 
 function App() {
@@ -20,24 +21,26 @@ function App() {
     const toggleAccount = () => setShowAccount(prev => !prev);
 
     return (
-        <UserProvider>
-            <Router>
-                <SpeedInsights />
-                <Navbar 
-                    goToJoin={toggleJoin} // Cambia a la función de controlador
-                    showAccount={showAccount}
-                    setShowAccount={toggleAccount} // Cambia a la función de controlador
-                />
-                {showJoin && <Join onClose={toggleJoin} />}
-                {showAccount && <Account onClose={toggleAccount} />}
-                <Routes>
-                    <Route path='/' element={<Home />} />
-                    <Route path='/signup' element={<Signup />} />
-                    <Route path='/login' element={<Login />} />
-                    <Route path='/dashboard' element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-                </Routes>
-            </Router>
-        </UserProvider>
+        <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
+            <UserProvider>
+                <Router>
+                    <SpeedInsights />
+                    <Navbar 
+                        goToJoin={toggleJoin} // Cambia a la función de controlador
+                        showAccount={showAccount}
+                        setShowAccount={toggleAccount} // Cambia a la función de controlador
+                    />
+                    {showJoin && <Join onClose={toggleJoin} />}
+                    {showAccount && <Account onClose={toggleAccount} />}
+                    <Routes>
+                        <Route path='/' element={<Home />} />
+                        <Route path='/signup' element={<Signup />} />
+                        <Route path='/login' element={<Login />} />
+                        <Route path='/dashboard' element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+                    </Routes>
+                </Router>
+            </UserProvider>
+        </GoogleOAuthProvider>
     );
 }
 

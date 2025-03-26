@@ -1,6 +1,6 @@
 const multer = require('multer');
 const path = require('path');
-const { fileTypeFromBuffer } = require('file-type');
+const fileType = require('file-type');
 const fs = require('fs/promises');
 const sharp = require('sharp');
 require('dotenv').config();
@@ -58,7 +58,7 @@ exports.validateFiles = async (req, res, next) => {
         for (const file of req.files) {
             // Leer el archivo temporal
             const buffer = await fs.readFile(file.path);
-            const type = await fileTypeFromBuffer(buffer);
+            const type = await fileType.fileTypeFromBuffer(buffer);
             
             // Validación de tipo real
             if (!type || !allowedMimes.has(type.mime)) {

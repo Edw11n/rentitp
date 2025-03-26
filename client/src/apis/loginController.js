@@ -2,7 +2,7 @@
 import Axios from 'axios';
 const API_URL = process.env.REACT_APP_API_URL;
 
-export const loginUser = async ({ email, password, setUser }) => {
+export const loginUser = async ({ email, password, login }) => {
 if (!email || !password) {
     return { success: false, message: 'Por favor rellene todos los campos' };
 }
@@ -26,7 +26,7 @@ try {
     refreshToken
     };
     // Guarda el usuario en el contexto y en el localStorage para persistencia
-    setUser(userData);
+    login(userData);
     localStorage.setItem('user', JSON.stringify(userData));
     return { success: true };
 } catch (error) {

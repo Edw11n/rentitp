@@ -1,7 +1,10 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginUser } from '../apis/loginController'; // Importa el controlador
+import { loginUser } from '../apis/loginController';
 import { UserContext } from "../contexts/UserContext";
+import { GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
+import { googleLogin } from "../apis/googleAuthController";
 import '../styles/log.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
@@ -10,16 +13,16 @@ function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
-    const { setUser } = useContext(UserContext);
+    const { login } = useContext(UserContext);
     const navigate = useNavigate();
 
     const goToHome = () => {
         navigate('/');
     };
-
+    // Login con email y contraseña
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const result = await loginUser({ email, password, setUser });
+        const result = await loginUser({ email, password, login });
         if (result.success) {
             console.log('Login exitoso');
             goToHome();
@@ -27,14 +30,44 @@ function Login() {
             setMessage(result.message);
         }
     };
+    // Login con Google
+    const handleGoogleLogin = async (credentialResponse) => {
+        try {
+            const {credential} = credentialResponse;
+            if (!credential) {
+                console.error('No se recibio el token de google');
+                return;
+            }
+            const decoded = jwtDecode(credential);
+            console.log('Token decodificado:', decoded);
 
-    return (  
+            const result = await googleLogin({ token: credential, login });
+            if (result.success) {
+                console.log('Login exitoso');
+                goToHome();
+            } else {
+                setMessage(result.message);
+            }
+        } catch (error) {
+            console.error('Error en el login con Google:', error);
+            setMessage('Error en el login con Google');
+        }
+    }
+
+    return (
         <div className="container login-container">
             <FontAwesomeIcon icon={faTimes} className="exit-icon-login" onClick={goToHome} />
             
             <div className="div-container">
                 <div className="title">
                     <h2>Bienvenido de vuelta</h2>
+                    <div className="google-login-container">
+                        <GoogleLogin 
+                            onSuccess={handleGoogleLogin}
+                            onError={() => setMessage('Error en el login con Google')}
+                        />
+                        <p className="google-text">O</p>
+                    </div>
                     <p className="subtitle">Ingresa tus credenciales para continuar</p>
                 </div>
                 

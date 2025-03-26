@@ -42,6 +42,8 @@ exports.addApartment = async (req, res) => {
                 );
             } catch (error) {
                 // Rollback: Eliminar el apartamento y limpiar archivos en caso de error
+                console.log('Error agregando imágenes:', error);
+                console.error('Error agregando imágenes:', error);
                 await Apartment.deleteApartment(apartmentId);
                 throw error;
             }
@@ -54,6 +56,7 @@ exports.addApartment = async (req, res) => {
         });
     } catch (error) {
         // Limpiar archivos subidos en caso de error
+        console.error('Error agregando apartamento:', error);
         if (req.files) {
             await Promise.all(
                 req.files.map(file => 
@@ -160,6 +163,7 @@ exports.updateApartment = async (req, res) => {
                 unlink(file.path.replace(/\\/g, '/')).catch(() => {})
             ));
         }
+        console.error('Error actualizando apartamento:', error);
         res.status(500).json({ 
             error: 'Error al actualizar apartamento',
             ...(process.env.NODE_ENV === 'development' && { details: error.message })
