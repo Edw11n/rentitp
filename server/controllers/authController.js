@@ -18,7 +18,8 @@ const googleLogin = async (req, res) => {
         });
 
         const payload = ticket.getPayload();
-        const { email, name, sub } = payload; // sub es el ID único del usuario en Google
+        const { email, given_name, family_name, sub } = payload; // sub es el ID único del usuario en Google
+        const rolId = 1; // Asignar rol por defecto
 
         // Buscar usuario en la base de datos
         let [user] = await db.query(`
@@ -26,30 +27,39 @@ const googleLogin = async (req, res) => {
             FROM users AS U 
             LEFT JOIN user_rol AS UR ON U.user_id = UR.user_id 
             WHERE U.user_email = ? 
-            LIMIT 1
-        `, [email]);
+            LIMIT 1`
+        , [email]);
 
         if (user.length === 0) {
             // Si el usuario no existe, crearlo automáticamente
             await db.query(`
-                INSERT INTO users (user_nombre, user_email, user_google_id)
-                VALUES (?, ?, ?)
-            `, [name, email, sub]);
-
+                INSERT INTO users (user_name, user_lastname, user_email, user_google_id)
+                VALUES (?, ?, ?, ?)`
+            , [given_name, family_name,  email, sub]);
+            // Obtener el ID del nuevo usuario
+            [selectUser] = await db.query(`
+                SELECT LAST_INSERT_ID() AS user_id`
+            );
+            const userId = selectUser[0].user_id;
+            // Asignar rol al nuevo usuario
+            await db.query(`
+                INSERT INTO user_rol (user_id, rol_id, start_date)
+                VALUES (?, ?, NOW())`
+            , [userId, rolId]);
             // Obtener el usuario recién creado con su rol
             [user] = await db.query(`
                 SELECT 
                 U.user_id,
-                U.user_nombre,
-                U.user_apellido,
+                U.user_name,
+                U.user_lastname,
                 U.user_email,
-                U.user_telefono, 
+                U.user_phonenumber, 
                 UR.rol_id 
                 FROM users AS U 
                 LEFT JOIN user_rol AS UR ON U.user_id = UR.user_id 
                 WHERE U.user_email = ? 
-                LIMIT 1
-            `, [email]);
+                LIMIT 1`
+            , [email]);
         }
 
         if (user.length === 0) {
@@ -57,7 +67,7 @@ const googleLogin = async (req, res) => {
         }
 
         // Extraer información del usuario
-        console.log("Usuario encontrado:", user[0]); // 🔍 Verifica si se obtiene el rol
+        console.log("Usuario encontrado:", user[0]); // Verifica si se obtiene el rol
 
         const { user_id, user_name, user_lastname, user_email, user_phonenumber, rol_id } = user[0];
 

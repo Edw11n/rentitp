@@ -11,8 +11,8 @@ export const UserProvider = ({ children }) => {
         return storedUser ? JSON.parse(storedUser) : null;
     });
 
-    const login = ({ id, nombre, apellido, email, telefono, rol, token }) => {
-        const userData = { id, nombre, apellido, email, telefono, rol, token };
+    const login = ({ id, nombre, apellido, email, telefono, documento, rol, token }) => {
+        const userData = { id, nombre, apellido, email, telefono, documento, rol, token };
         setUser(userData);
         localStorage.setItem('user', JSON.stringify(userData));
     };

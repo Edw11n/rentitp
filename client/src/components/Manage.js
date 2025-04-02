@@ -29,14 +29,17 @@ const handleNewImageChange = (e) => {
     }
 };
 
-const handleViewImageExisting = (imgPath) => {
-    const url = `${API_URL}/${imgPath}`;
-    window.open(url, '_blank');
+const handleViewImageExisting = (imgBase64) => {
+    const newTab = window.open();
+    if (newTab) {
+        newTab.document.write(`<img src="${imgBase64}" style="max-width: 80%; max-height: 80vh;" />`);
+        newTab.document.title = "Vista previa de la imagen";
+    }
 };
 
 const handleRemoveExistingImage = (index) => {
     if (editFormData.images) {
-    let imagesArray = editFormData.images.split(',').map(img => img.trim());
+    let imagesArray = [...editFormData.images];
     imagesArray.splice(index, 1);
     const newImagesStr = imagesArray.join(',');
     handleInputChange({ target: { name: 'images', value: newImagesStr } });
@@ -57,7 +60,6 @@ const handleRemoveNewImage = (index) => {
 // Función para descargar documento (PDF o Excel)
 const downloadDocument = (id, type) => {
     // Se construye la URL:
-    // Ejemplo para PDF: http://localhost:3001/documents/apartments/14/document/pdf
     const url = `${API_URL}/documents/apartments/${id}/document/${type}`;
     window.open(url, '_blank');
 };
@@ -119,8 +121,8 @@ return (
                     />
                     <div className="edit-images-section">
                         <p>Imágenes existentes:</p>
-                        {editFormData.images && editFormData.images.trim() !== "" ? (
-                        editFormData.images.split(',').map((img, index) => (
+                        {Array.isArray(editFormData.images) && editFormData.images.length > 0 ? (
+                        editFormData.images.map((img, index) => (
                             <div key={index} className="image-preview-item">
                             <span>Imagen {index + 1}</span>
                             <button 

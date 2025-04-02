@@ -1,13 +1,11 @@
 const express = require('express');
 const cors = require('cors');
-const lessorRoutes = require('./routes/lessorRoutes');
+const userRoutes = require('./routes/userRoutes');
 const apartmentRoutes = require('./routes/apartmentRoutes');
 const DocumentRoutes = require('./routes/DocumentRoutes');
 const authRoutes = require('./routes/auth');
 const path = require('path');
 const helmet = require('helmet');
-const session = require('express-session');
-const passport = require('./utils/passport');
 require('dotenv').config();
 
 const app = express();
@@ -20,23 +18,13 @@ app.use(cors({
     exposedHeaders: ['Content-Disposition'],
     credentials: true
 }));
-//Middleware de sesión
-app.use(session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: true
-}));
-// Middleware de Passport
-app.use(passport.initialize());
-app.use(passport.session());    
-app.use(express.json());
 
 // Middlewares de seguridad
 app.use(
     helmet({
         contentSecurityPolicy: {
             directives: {
-                defaultSrc: ["'self'"],
+                defaultSrc: ["'self'", "https://accounts.google.com"],
                 imgSrc: ["'self'", "data:"], // 🔥 Permite imágenes desde tu servidor y datos en base64
                 scriptSrc: ["'self'"],
                 objectSrc: ["'none'"],
@@ -65,7 +53,7 @@ app.use((req, _, next) => {
 });
 
 // Rutas principales
-app.use('/lessors', lessorRoutes);
+app.use('/users', userRoutes);
 app.use('/apartments', apartmentRoutes);
 app.use('/documents', DocumentRoutes);
 app.use('/auth', authRoutes);

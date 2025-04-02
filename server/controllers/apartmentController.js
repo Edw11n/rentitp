@@ -10,7 +10,6 @@ exports.addApartment = async (req, res) => {
         // Validación de campos requeridos
         const requiredFields = ['barrio', 'direccion', 'latitud', 'longitud'];
         const missingFields = requiredFields.filter(field => !req.body[field]);
-        
         if (missingFields.length > 0) {
             return res.status(400).json({
                 error: 'Campos requeridos faltantes',
@@ -30,19 +29,19 @@ exports.addApartment = async (req, res) => {
         const apartmentId = apartment.insertId;
 
         // Procesar imágenes subidas, si existen
-        if (req.files?.length > 0) {
+        if (req.encryptedFiles && req.encryptedFiles.length > 0) {
             try {
                 await Promise.all(
-                    req.files.map(file => 
-                        Apartment.addImage(
+                    req.encryptedFiles.map(file => {
+                        console.log('IV en controlador addApartment:', file.iv);
+                        return Apartment.addImage(
                             apartmentId, 
-                            file.path.replace(/\\/g, '/') // Normalizar rutas para Windows
-                        )
-                    )
+                            file.path.replace(/\\/g, '/'), // Normalizar rutas para Windows
+                            file.iv
+                        );
+                    })
                 );
             } catch (error) {
-                // Rollback: Eliminar el apartamento y limpiar archivos en caso de error
-                console.log('Error agregando imágenes:', error);
                 console.error('Error agregando imágenes:', error);
                 await Apartment.deleteApartment(apartmentId);
                 throw error;
@@ -55,12 +54,11 @@ exports.addApartment = async (req, res) => {
             images: req.files?.map(file => file.path.replace(/\\/g, '/')) || []
         });
     } catch (error) {
-        // Limpiar archivos subidos en caso de error
         console.error('Error agregando apartamento:', error);
         if (req.files) {
             await Promise.all(
                 req.files.map(file => 
-                    unlink(file.path.replace(/\\/g, '/')).catch(() => {})
+                    fs.unlink(file.path.replace(/\\/g, '/')).catch(() => {})
                 )
             );
         }
@@ -78,14 +76,16 @@ exports.uploadImage = async (req, res) => {
             return res.status(400).json({ error: 'No se han subido archivos' });
         }
 
-        // Agregar imágenes a la BD, normalizando rutas
+        // Agregar imágenes a la BD, normalizando rutas y utilizando IV
         const results = await Promise.allSettled(
-            req.files.map(file => 
-                Apartment.addImage(
+            req.files.map(file => {
+                console.log('IV en controlador uploadImage:', file.iv);
+                return Apartment.addImage(
                     id_apt, 
-                    file.path.replace(/\\/g, '/') // Convertir a rutas tipo UNIX
-                )
-            )
+                    file.path.replace(/\\/g, '/'), // Convertir a rutas tipo UNIX
+                    file.iv
+                );
+            })
         );
 
         const successful = results.filter(r => r.status === 'fulfilled');
@@ -107,11 +107,12 @@ exports.uploadImage = async (req, res) => {
     }
 };
 
+
 exports.updateApartment = async (req, res) => {
     try {
         const { id_apt } = req.params;
         let { direccion_apt, barrio, latitud_apt, longitud_apt, info_add_apt, existing_images } = req.body;
-        const newImages = req.files || [];
+        const newImages = req.encryptedFiles || [];
 
         // Validación de campos requeridos
         const requiredFields = ['direccion_apt', 'barrio', 'latitud_apt', 'longitud_apt'];
@@ -126,7 +127,7 @@ exports.updateApartment = async (req, res) => {
         // Convertir existing_images a array si es una cadena
         const existingImagesArray = typeof existing_images === 'string'
             ? existing_images.split(',').map(img => img.trim()).filter(Boolean)
-            : existing_images;
+            : (Array.isArray(existing_images) ? existing_images : []);
 
         // Actualizar datos principales del apartamento
         const updateResult = await Apartment.updateApartment(id_apt, { 
@@ -139,22 +140,21 @@ exports.updateApartment = async (req, res) => {
         });
 
         // Procesar y agregar nuevas imágenes, si existen
-        const imageResults = await Promise.allSettled(
-            newImages.map(file => 
-                Apartment.addImage(
-                    id_apt, 
-                    file.path.replace(/\\/g, '/')
-                )
-            )
-        );
-
+        if (newImages.length > 0) {
+            const imageResults = await Promise.allSettled(
+                newImages.map(file => {
+                    console.log('IV en controlador updateApartment:', file.iv)
+                    return Apartment.addImage(
+                        id_apt, 
+                        file.path.replace(/\\/g, '/'),
+                        file.iv
+                    );
+                })
+            );
+        }
         res.json({
             message: 'Apartamento actualizado exitosamente',
-            updatedFields: updateResult.affectedRows,
-            newImages: {
-                added: imageResults.filter(r => r.status === 'fulfilled').length,
-                failed: imageResults.filter(r => r.status === 'rejected').length
-            }
+            updatedFields: updateResult.affectedRows
         });
     } catch (error) {
         // Limpiar archivos en caso de error

@@ -12,6 +12,7 @@ import Join from './components/Join';
 import ProtectedRoute from './contexts/ProtectedRoute';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import './App.css';
+import MyAccount from './pages/My-Account';
 
 function App() {
     const [showJoin, setShowJoin] = useState(false);
@@ -37,6 +38,7 @@ function App() {
                         <Route path='/signup' element={<Signup />} />
                         <Route path='/login' element={<Login />} />
                         <Route path='/dashboard' element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+                        <Route path='/my-account' element={<MyAccount />} />
                     </Routes>
                 </Router>
             </UserProvider>

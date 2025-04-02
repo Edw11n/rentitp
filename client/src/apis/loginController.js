@@ -7,7 +7,7 @@ if (!email || !password) {
     return { success: false, message: 'Por favor rellene todos los campos' };
 }
 try {
-    const response = await Axios.post(`${API_URL}/lessors/login`, {
+    const response = await Axios.post(`${API_URL}/users/login`, {
     email,
     password
     });
@@ -21,7 +21,7 @@ try {
     apellido,
     email: userEmail,
     telefono,
-    rolId: rol,
+    rol: rol,
     token: accessToken,
     refreshToken
     };
