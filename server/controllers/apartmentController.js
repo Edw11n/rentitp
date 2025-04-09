@@ -114,6 +114,8 @@ exports.updateApartment = async (req, res) => {
         let { direccion_apt, barrio, latitud_apt, longitud_apt, info_add_apt, existing_images } = req.body;
         const newImages = req.encryptedFiles || [];
 
+        console.log('Datos recibidos en updateApartment:', req.body);
+
         // Validación de campos requeridos
         const requiredFields = ['direccion_apt', 'barrio', 'latitud_apt', 'longitud_apt'];
         const missingFields = requiredFields.filter(field => !req.body[field]);
@@ -124,12 +126,41 @@ exports.updateApartment = async (req, res) => {
             });
         }
 
-        // Convertir existing_images a array si es una cadena
-        const existingImagesArray = typeof existing_images === 'string'
-            ? existing_images.split(',').map(img => img.trim()).filter(Boolean)
-            : (Array.isArray(existing_images) ? existing_images : []);
+        // Convertir existing_images en un array válido
+        let existingImagesArray = [];
+        if (existing_images) {
+            try {
+                existingImagesArray = JSON.parse(existing_images);
+                if (!Array.isArray(existingImagesArray)) {
+                    throw new Error('existing_images no es un array');
+                }
+                console.log('Imágenes existentes parseadas:', existingImagesArray);
+            } catch (error) {
+                console.error('Error al parsear existing_images:', error);
+                return res.status(400).json({ error: 'Formato de existing_images inválido' });
+            }
+        }
 
-        // Actualizar datos principales del apartamento
+        // Obtener imágenes actuales del apartamento en la base de datos
+        const currentImages = await Apartment.getApartmentImages(id_apt);
+        const currentImagePaths = currentImages.map(img => img.image_path);
+
+        // Determinar imágenes a eliminar (las que están en BD pero no en existingImagesArray)
+        const imagesToDelete = currentImagePaths.filter(img => !existingImagesArray.includes(img));
+
+        // Eliminar imágenes innecesarias del servidor
+        await Promise.allSettled(imagesToDelete.map(async (imgPath) => {
+            const fullPath = path.join(__dirname, '..', imgPath); // Ruta absoluta
+            try {
+                console.log('Eliminando archivo:', fullPath);
+                await fs.unlink(fullPath);
+                await Apartment.deleteImage(id_apt, imgPath);
+            } catch (err) {
+                console.error('Error al eliminar archivo:', err);
+            }
+        }));
+
+        // Actualizar datos del apartamento
         const updateResult = await Apartment.updateApartment(id_apt, { 
             direccion_apt, 
             barrio, 
@@ -139,28 +170,28 @@ exports.updateApartment = async (req, res) => {
             existing_images: existingImagesArray
         });
 
-        // Procesar y agregar nuevas imágenes, si existen
+        // Agregar nuevas imágenes si existen
         if (newImages.length > 0) {
-            const imageResults = await Promise.allSettled(
-                newImages.map(file => {
-                    console.log('IV en controlador updateApartment:', file.iv)
-                    return Apartment.addImage(
-                        id_apt, 
-                        file.path.replace(/\\/g, '/'),
-                        file.iv
-                    );
-                })
-            );
+            await Promise.allSettled(newImages.map(file => {
+                console.log('Agregando nueva imagen:', file.path);
+                return Apartment.addImage(
+                    id_apt, 
+                    file.path.replace(/\\/g, '/'),
+                    file.iv
+                );
+            }));
         }
+
         res.json({
             message: 'Apartamento actualizado exitosamente',
             updatedFields: updateResult.affectedRows
         });
+
     } catch (error) {
         // Limpiar archivos en caso de error
-        if (req.files) {
+        if (req.files && req.files.length > 0) {
             await Promise.all(req.files.map(file => 
-                unlink(file.path.replace(/\\/g, '/')).catch(() => {})
+                fs.unlink(file.path.replace(/\\/g, '/')).catch(err => console.error('Error al eliminar archivo:', err))
             ));
         }
         console.error('Error actualizando apartamento:', error);

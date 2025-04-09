@@ -94,7 +94,7 @@ const useManageController = () => {
         console.log("Nuevas imágenes a enviar:", newImageFiles);
 
         const existingImages = Array.isArray(editFormData.images)
-            ? editFormData.images.filter(img => typeof img === "string" && (img.startsWith("http") || img.startsWith("data:image")))
+            ? editFormData.images
             : [];
         
         console.log("Imágenes existentes normalizadas que se enviarán:", existingImages);
@@ -119,11 +119,7 @@ const useManageController = () => {
         })
         .then(() => {
             alert("Apartamento actualizado exitosamente");
-            setApartmentList((prevList) =>
-                prevList.map((apartment) =>
-                    apartment.id_apt === id_apt ? { ...apartment, ...editFormData } : apartment
-                )
-            );
+            fetchApartments();
             setEditApartmentId(null);
         })
         .catch((error) => {

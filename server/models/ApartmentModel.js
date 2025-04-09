@@ -125,7 +125,9 @@ class Apartment {
                     await Promise.all(
                         imagesToDelete.map(async (imgPath) => {
                             try {
-                                await unlink(path.join(__dirname, '../uploads', imgPath));
+                                const fullPath = path.join(__dirname, '../', imgPath);
+                                console.log('Eliminando archivo:', fullPath);
+                                await unlink(fullPath);
                             } catch (error) {
                                 console.error(`Error eliminando archivo ${imgPath}:`, error);
                             }
@@ -143,6 +145,22 @@ class Apartment {
             connection.release();
         }
     }
+
+    static async getApartmentImages(id_apt) {
+        const connection = await db.getConnection();
+        try {
+            const [rows] = await connection.query(
+                'SELECT id_img, imagen, iv FROM apartment_images WHERE id_apt = ?',
+                [id_apt]
+            );
+            return rows;
+        } catch (error) {
+            throw error;
+        } finally {
+            connection.release();
+        }
+    }
+
 
     static async getApartmentsByLessor(user_id) {
         const [results] = await db.query(

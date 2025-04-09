@@ -14,6 +14,7 @@ const {
     fetchApartments,
     editApartmentId,
     editFormData,
+    setEditFormData,
     handleEditClick,
     handleInputChange,
     handleDelete,
@@ -24,8 +25,8 @@ const {
 const [newImageFiles, setNewImageFiles] = useState([]);
 const handleNewImageChange = (e) => {
     if (e.target.files) {
-    const filesArray = Array.from(e.target.files);
-    setNewImageFiles(prevFiles => [...prevFiles, ...filesArray]);
+        const filesArray = Array.from(e.target.files);
+        setNewImageFiles(prevFiles => [...prevFiles, ...filesArray]);
     }
 };
 
@@ -39,11 +40,9 @@ const handleViewImageExisting = (imgBase64) => {
 
 const handleRemoveExistingImage = (index) => {
     if (editFormData.images) {
-    let imagesArray = [...editFormData.images];
-    imagesArray.splice(index, 1);
-    const newImagesStr = imagesArray.join(',');
-    handleInputChange({ target: { name: 'images', value: newImagesStr } });
-    console.log("Nuevo valor de imagenes ", newImagesStr);
+    const updatedImages = editFormData.images.filter((_, i) => i !== index);
+    setEditFormData({ ...editFormData, images: updatedImages });
+    console.log('Imágenes exitentes actualizadas:', updatedImages);
     }
 };
 
@@ -176,7 +175,10 @@ return (
                         )}
                     </div>
                     <div className="edit-buttons"> 
-                        <button className="update-btn" onClick={() => handleUpdate(apartment.id_apt, newImageFiles)}>Actualizar</button>
+                        <button className="update-btn" onClick={() => {
+                            handleUpdate(apartment.id_apt, newImageFiles);
+                            setNewImageFiles([]);
+                        }}>Actualizar</button>
                         <button className="cancel-btn" onClick={handleCancelEdit}>Cancelar</button>
                     </div>
                     </div>
