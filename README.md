@@ -16,4 +16,4 @@ Aplicación para gestión de alquileres.
 
 ## Autor
 
-Edw11n
+19jairo
