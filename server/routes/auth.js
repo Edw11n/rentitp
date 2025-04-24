@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { verifyToken, generateAccessToken } = require('../utils/auth');
+const {googleLogin} = require('../controllers/authController');
 
 router.post('/refresh-token', (req, res) => {
     const { refreshToken } = req.body;
@@ -16,4 +17,18 @@ router.post('/refresh-token', (req, res) => {
         res.status(401).json({ error: 'Token de refresco inválido o expirado' });
     }
 });
+router.get('/logout', (req, res) => {
+    req.logout(() => {
+        req.session.destroy((err) => {
+            if (err) {
+                console.error('Error cerrando sesión:', err);
+                return res.status(500).json({ error: 'No se pudo cerrar sesión' });
+            }
+            res.json({ message: 'Sesión cerrada correctamente' });
+        });
+    });
+});
+
+router.post('/google', googleLogin)
+
 module.exports = router;

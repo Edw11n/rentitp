@@ -1,8 +1,9 @@
 const multer = require('multer');
 const path = require('path');
-const { fileTypeFromBuffer } = require('file-type');
+const fileType = require('file-type');
 const fs = require('fs/promises');
 const sharp = require('sharp');
+const { encryptImage } = require('../utils/encryption');
 require('dotenv').config();
 
 // Configuración de almacenamiento dinámico por usuario
@@ -58,7 +59,7 @@ exports.validateFiles = async (req, res, next) => {
         for (const file of req.files) {
             // Leer el archivo temporal
             const buffer = await fs.readFile(file.path);
-            const type = await fileTypeFromBuffer(buffer);
+            const type = await fileType.fileTypeFromBuffer(buffer);
             
             // Validación de tipo real
             if (!type || !allowedMimes.has(type.mime)) {
@@ -68,7 +69,7 @@ exports.validateFiles = async (req, res, next) => {
 
             // Procesar imágenes
             if (type.mime.startsWith('image/')) {
-                await sharp(buffer)
+                const processedBuffer = await sharp(buffer)
                     .resize({
                         width: 1920,
                         height: 1080,
@@ -80,7 +81,19 @@ exports.validateFiles = async (req, res, next) => {
                         lossless: false,
                         alphaQuality: 100
                     })
-                    .toFile(file.path); // Sobrescribe el archivo temporal con la versión optimizada
+                    .toBuffer();
+
+                    // Encriptar imagen procesada
+                    const {iv, data} = encryptImage(processedBuffer);
+                    await fs.writeFile(file.path, Buffer.from(data, 'hex'));
+
+                    // Guardar la ruta y el IV en la base de datos
+                    req.encryptedFiles = req.encryptedFiles || [];
+                    req.encryptedFiles.push({
+                        path: file.path,
+                        iv: iv
+                    })
+                    console.log('IV en middleware:', iv);
             }
         }
         next();

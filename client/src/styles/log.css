@@ -7,7 +7,67 @@
     background: linear-gradient(135deg, #4f46e5 0%, #818cf8 100%);
     position: relative;
 }
+.google-login-container {
+    margin: 1rem 0;
+    width: 100%;
+}
+.google-login-container > div { /* Contenedor del botón de Google */
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.google-login-container button {
+    background: white !important;
+    border: 2px solid #e2e8f0 !important;
+    border-radius: 8px !important;
+    padding: 1rem 1.5rem !important;
+    color: #2c3e50 !important;
+    font-weight: 500 !important;
+    transition: all 0.3s ease !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 1rem !important;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: none !important;
+}
 
+.google-login-container button:hover {
+    transform: translateY(-2px) !important;
+    border-color: #818CF8 !important;
+    box-shadow: 0 8px 15px rgba(129, 140, 248, 0.1) !important;
+}
+
+.google-login-container button div {
+    padding: 0 !important;
+    background: none !important;
+    box-shadow: none !important;
+}
+
+.google-text {
+    text-align: center;
+    color: #64748B;
+    margin: 0.5rem 0;
+    position: relative;
+}
+
+.google-text::before,
+.google-text::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 45%;
+    height: 1px;
+    background: #e2e8f0;
+}
+
+.google-text::before {
+    left: 0;
+}
+
+.google-text::after {
+    right: 0;
+}
 .exit-icon {
     position: fixed;
     top: 8rem;
@@ -93,7 +153,7 @@
 .title h2 {
     color: #2c3e50;
     font-size: 2rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     font-weight: 600;
     text-align: center;
 }
@@ -139,11 +199,11 @@ input:focus {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
-    margin: 2rem 0;
+    margin: 1rem 0;
 }
 
 .role-card {
-    padding: 1.5rem;
+    padding: 1rem;
     border: 2px solid #e2e8f0;
     border-radius: 8px;
     cursor: pointer;
@@ -163,7 +223,7 @@ input:focus {
 
 /* ===== Botón de Registro ===== */
 .in-button {
-    padding: 1.2rem;
+    padding: 1rem;
     background: linear-gradient(135deg, #4F46E5 0%, #818CF8 100%);
     color: white;
     border: none;
@@ -175,7 +235,7 @@ input:focus {
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin-bottom: 2rem;
-    margin-top: 1.5rem;
+    margin-top: 1rem;
 }
 
 .in-button:hover {
@@ -296,6 +356,6 @@ input:focus {
     }
     
     .title h2 {
-        font-size: 1.75rem;
+        font-size: 1.65rem;
     }
 }

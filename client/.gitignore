@@ -4,7 +4,11 @@
 /node_modules
 /.pnp
 .pnp.js
+.env
 
+
+#certificado de ssl
+/certs
 
 # testing
 /coverage

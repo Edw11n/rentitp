@@ -14,6 +14,7 @@ const {
     fetchApartments,
     editApartmentId,
     editFormData,
+    setEditFormData,
     handleEditClick,
     handleInputChange,
     handleDelete,
@@ -24,23 +25,24 @@ const {
 const [newImageFiles, setNewImageFiles] = useState([]);
 const handleNewImageChange = (e) => {
     if (e.target.files) {
-    const filesArray = Array.from(e.target.files);
-    setNewImageFiles(prevFiles => [...prevFiles, ...filesArray]);
+        const filesArray = Array.from(e.target.files);
+        setNewImageFiles(prevFiles => [...prevFiles, ...filesArray]);
     }
 };
 
-const handleViewImageExisting = (imgPath) => {
-    const url = `${API_URL}/${imgPath}`;
-    window.open(url, '_blank');
+const handleViewImageExisting = (imgBase64) => {
+    const newTab = window.open();
+    if (newTab) {
+        newTab.document.write(`<img src="${imgBase64}" style="max-width: 80%; max-height: 80vh;" />`);
+        newTab.document.title = "Vista previa de la imagen";
+    }
 };
 
 const handleRemoveExistingImage = (index) => {
     if (editFormData.images) {
-    let imagesArray = editFormData.images.split(',').map(img => img.trim());
-    imagesArray.splice(index, 1);
-    const newImagesStr = imagesArray.join(',');
-    handleInputChange({ target: { name: 'images', value: newImagesStr } });
-    console.log("Nuevo valor de imagenes ", newImagesStr);
+    const updatedImages = editFormData.images.filter((_, i) => i !== index);
+    setEditFormData({ ...editFormData, images: updatedImages });
+    console.log('Imágenes exitentes actualizadas:', updatedImages);
     }
 };
 
@@ -57,7 +59,6 @@ const handleRemoveNewImage = (index) => {
 // Función para descargar documento (PDF o Excel)
 const downloadDocument = (id, type) => {
     // Se construye la URL:
-    // Ejemplo para PDF: http://localhost:3001/documents/apartments/14/document/pdf
     const url = `${API_URL}/documents/apartments/${id}/document/${type}`;
     window.open(url, '_blank');
 };
@@ -119,8 +120,8 @@ return (
                     />
                     <div className="edit-images-section">
                         <p>Imágenes existentes:</p>
-                        {editFormData.images && editFormData.images.trim() !== "" ? (
-                        editFormData.images.split(',').map((img, index) => (
+                        {Array.isArray(editFormData.images) && editFormData.images.length > 0 ? (
+                        editFormData.images.map((img, index) => (
                             <div key={index} className="image-preview-item">
                             <span>Imagen {index + 1}</span>
                             <button 
@@ -174,7 +175,10 @@ return (
                         )}
                     </div>
                     <div className="edit-buttons"> 
-                        <button className="update-btn" onClick={() => handleUpdate(apartment.id_apt, newImageFiles)}>Actualizar</button>
+                        <button className="update-btn" onClick={() => {
+                            handleUpdate(apartment.id_apt, newImageFiles);
+                            setNewImageFiles([]);
+                        }}>Actualizar</button>
                         <button className="cancel-btn" onClick={handleCancelEdit}>Cancelar</button>
                     </div>
                     </div>

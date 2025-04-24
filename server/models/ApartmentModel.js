@@ -1,6 +1,8 @@
 const db = require('../config/db');
 const path = require('path');
 const { unlink } = require('fs').promises;
+const { decryptImage } = require('../utils/encryption');
+const fs = require('fs/promises');
 
 class Apartment {
     static async addApartment(data) {
@@ -47,13 +49,14 @@ class Apartment {
         }
     }
 
-    static async addImage(id_apt, imagePath) {
+    static async addImage(id_apt, imagePath, iv) {
+        console.log('IV de la imagen en modelo:', iv);
         const connection = await db.getConnection();
         try {
             const normalizedPath = imagePath.replace(/\\/g, '/');
             const [result] = await connection.query(
-                'INSERT INTO apartment_images (imagen, id_apt) VALUES (?, ?)',
-                [normalizedPath, id_apt]
+                'INSERT INTO apartment_images (imagen, iv, id_apt) VALUES (?, ?, ?)',
+                [normalizedPath, iv, id_apt]
             );
             return result;
         } finally {
@@ -122,7 +125,9 @@ class Apartment {
                     await Promise.all(
                         imagesToDelete.map(async (imgPath) => {
                             try {
-                                await unlink(path.join(__dirname, '../uploads', imgPath));
+                                const fullPath = path.join(__dirname, '../', imgPath);
+                                console.log('Eliminando archivo:', fullPath);
+                                await unlink(fullPath);
                             } catch (error) {
                                 console.error(`Error eliminando archivo ${imgPath}:`, error);
                             }
@@ -141,12 +146,28 @@ class Apartment {
         }
     }
 
+    static async getApartmentImages(id_apt) {
+        const connection = await db.getConnection();
+        try {
+            const [rows] = await connection.query(
+                'SELECT id_img, imagen, iv FROM apartment_images WHERE id_apt = ?',
+                [id_apt]
+            );
+            return rows;
+        } catch (error) {
+            throw error;
+        } finally {
+            connection.release();
+        }
+    }
+
+
     static async getApartmentsByLessor(user_id) {
         const [results] = await db.query(
             `SELECT 
                 a.*, 
                 b.barrio,
-                GROUP_CONCAT(ai.imagen) AS images
+                GROUP_CONCAT(CONCAT(ai.iv, ':', ai.imagen)) AS images
             FROM apartments AS a
             LEFT JOIN barrio AS b ON a.id_barrio = b.id_barrio
             LEFT JOIN apartment_images AS ai ON a.id_apt = ai.id_apt
@@ -154,7 +175,35 @@ class Apartment {
             GROUP BY a.id_apt`,
             [user_id]
         );
-        return results;
+        const processedResults = await Promise.all(
+            results.map(
+                async apartment => {
+                    if (apartment.images) {
+                        const imageStrings = apartment.images.split(',');
+                        const decryptedImages = await Promise.all(
+                            imageStrings.map(async imgStr => {
+                                const parts = imgStr.split(':');
+                                if (parts.length !== 2) {
+                                    console.error(`Formato de imagen inválido: ${imgStr}`);
+                                    return null;
+                                }
+                                const [iv, imagePath] = parts;
+                                try {
+                                    const encryptedBuffer = await fs.readFile(imagePath);
+                                    const encryptedHex = encryptedBuffer.toString('hex');
+                                    console.log('IV para desencriptar:', iv);
+                                    const decryptedBuffer = decryptImage(iv, encryptedHex);
+                                    return `data:image/webp;base64,${decryptedBuffer.toString('base64')}`;
+                                } catch (error) {
+                                    console.error(`Error al leer o desencriptar la imagen: (${imagePath}) `, error);
+                                    return null;
+                                }
+                            }));
+                        apartment.images = decryptedImages.filter(img=> img !== null);
+                    }
+                    return apartment;
+                }));
+        return processedResults;
     }
 
     static async deleteApartment(id_apt, userId) {
@@ -218,14 +267,42 @@ class Apartment {
                 u.user_lastname,
                 u.user_email,
                 u.user_phonenumber,
-                GROUP_CONCAT(ai.imagen) AS images
+                GROUP_CONCAT(CONCAT(ai.iv, ':', ai.imagen)) AS images
             FROM apartments AS a
             LEFT JOIN barrio AS b ON a.id_barrio = b.id_barrio
             LEFT JOIN users AS u ON a.user_id = u.user_id
             LEFT JOIN apartment_images AS ai ON a.id_apt = ai.id_apt
             GROUP BY a.id_apt`
         );
-        return results;
+        const processedResults = await Promise.all(
+            results.map(
+                async apartment => {
+                    if (apartment.images) {
+                        const imageStrings = apartment.images.split(',');
+                        const decryptedImages = await Promise.all(
+                            imageStrings.map(async imgStr => {
+                                const parts = imgStr.split(':');
+                                if (parts.length !== 2) {
+                                    console.error(`Formato de imagen inválido: ${imgStr}`);
+                                    return null;
+                                }
+                                const [iv, imagePath] = parts;
+                                try {
+                                    const encryptedBuffer = await fs.readFile(imagePath);
+                                    const encryptedHex = encryptedBuffer.toString('hex');
+                                    console.log('IV para desencriptar:', iv);
+                                    const decryptedBuffer = decryptImage(iv, encryptedHex);
+                                    return `data:image/webp;base64,${decryptedBuffer.toString('base64')}`;
+                                } catch (error) {
+                                    console.error(`Error al leer o desencriptar la imagen: (${imagePath}) `, error);
+                                    return null;
+                                }
+                            }));
+                        apartment.images = decryptedImages.filter(img=> img !== null);
+                    }
+                    return apartment;
+                }));
+        return processedResults;
     }
 
     static async getMarkersInfo() {

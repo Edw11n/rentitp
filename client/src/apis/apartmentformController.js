@@ -18,6 +18,7 @@ class ApartmentFormController {
         }
 
         try {
+            console.log('token', this.user.token);
             await Axios.post(`${API_URL}/apartments/addApartment`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',

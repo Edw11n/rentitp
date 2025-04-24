@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import SucessModal from '../components/SuccessModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import '../styles/log.css';
 import { signupUser } from '../apis/signupController'; // Importa el controlador
+import { UserContext } from "../contexts/UserContext";
+import { GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
+import { googleLogin } from "../apis/googleAuthController";
 
 function Signup() {
     const [nombre, setNombre] = useState("");
@@ -13,9 +17,10 @@ function Signup() {
     const [telefono, setTelefono] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [mensaje, setMensaje] = useState("");
+    const [mensaje, setMessage] = useState("");
     const [showSucess, setShowSucess] = useState(false);
     const [error, setError] = useState(false);
+    const {login} = useContext(UserContext);
     const [userType, setUserType] = useState(""); // Estado para almacenar el tipo de usuario
     const navigate = useNavigate();
 
@@ -28,7 +33,7 @@ function Signup() {
 
         if (password !== confirmPassword) {
             setError(true);
-            setMensaje("Las contraseñas no coinciden");
+            setMessage("Las contraseñas no coinciden");
             return;
         }
 
@@ -41,7 +46,7 @@ function Signup() {
         // Verifica que al menos un rol esté seleccionado
         if (!userType) {
             setError(true);
-            setMensaje("Por favor selecciona un tipo de usuario.");
+            setMessage("Por favor selecciona un tipo de usuario.");
             return;
         }
 
@@ -49,7 +54,7 @@ function Signup() {
         if (result.success) {
             setShowSucess(true);
         } else {
-            setMensaje(result.message);
+            setMessage(result.message);
             setError(true);
         }
     };
@@ -58,7 +63,29 @@ function Signup() {
         setShowSucess(false);
         navigate('/login');
     }
-
+    // Login con Google
+        const handleGoogleLogin = async (credentialResponse) => {
+            try {
+                const {credential} = credentialResponse;
+                if (!credential) {
+                    console.error('No se recibio el token de google');
+                    return;
+                }
+                const decoded = jwtDecode(credential);
+                console.log('Token decodificado:', decoded);
+    
+                const result = await googleLogin({ token: credential, login });
+                if (result.success) {
+                    console.log('Login exitoso');
+                    goToHome();
+                } else {
+                    setMessage(result.message);
+                }
+            } catch (error) {
+                console.error('Error en el login con Google:', error);
+                setMessage('Error en el login con Google');
+            }
+        }
     return (
         <div className="container">
             <FontAwesomeIcon icon={faTimes} className="exit-icon" onClick={goToHome} />
@@ -74,7 +101,13 @@ function Signup() {
                 <div className="title">
                     <h2>Crea tu cuenta</h2>
                 </div>
-                
+                <div className="google-login-container">
+                        <GoogleLogin 
+                            onSuccess={handleGoogleLogin}
+                            onError={() => setMessage('Error en el login con Google')}
+                        />
+                        <p className="google-text">O</p>
+                    </div>
                 <div className="input-grid">
                     <div className="input-group">
                         <label>Nombre</label>
