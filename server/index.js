@@ -57,7 +57,7 @@ app.use((req, _, next) => {
     next();
 });
 
-// Rutas principales
+
 const userRoutes = require('./routes/userRoutes');
 const apartmentRoutes = require('./routes/apartmentRoutes');
 const DocumentRoutes = require('./routes/DocumentRoutes');
