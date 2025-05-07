@@ -62,11 +62,13 @@ const userRoutes = require('./routes/userRoutes');
 const apartmentRoutes = require('./routes/apartmentRoutes');
 const DocumentRoutes = require('./routes/DocumentRoutes');
 const authRoutes = require('./routes/auth');
+const statsRoutes = require('./routes/statsRoutes');
 
 app.use('/users', userRoutes);
 app.use('/apartments', apartmentRoutes);
 app.use('/documents', DocumentRoutes);
 app.use('/auth', authRoutes);
+app.use('/stats', statsRoutes);
 
 // 404
 app.use((_, res) => {

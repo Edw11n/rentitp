@@ -1,6 +1,6 @@
 import React from "react";
 
-function Reviews() {
+function History() {
     return (
         <div>
             <h2>Facturación</h2>
@@ -9,4 +9,4 @@ function Reviews() {
         </div>
     );
 }
-export default Reviews;
+export default History;
