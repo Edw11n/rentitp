@@ -18,5 +18,14 @@ const getUserTopApartment = async (req, res) => {
         res.status(500).json({ message: "Error al obtener las estadísticas.", error: error.message });
     }
 };
+const getTopLandlord = async (req, res) => {
+    try {
+        const topLandlord = await Stats.getTopLandlord();
+        res.status(200).json(topLandlord);
+    } catch (error) {
+        console.error("Error en getTopLandlord controller:", error);
+        res.status(500).json({ message: "Error al obtener el arrendador con más apartamentos publicados." });
+    }
+};
 
-module.exports = { getUserTopApartment };
+module.exports = { getUserTopApartment, getTopLandlord };

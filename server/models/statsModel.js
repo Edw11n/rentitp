@@ -19,7 +19,7 @@ class Stats {
                     u2.user_email AS inquilino_email
                 FROM apartments a
                 JOIN user_apartment ua ON a.id_apt = ua.id_apt
-                JOIN users u ON a.user_id = u.user_id  -- arrendador
+                JOIN users u ON a.user_id = u.user_id  -- arrendador+
                 JOIN users u2 ON ua.id_user = u2.user_id  -- inquilino
                 JOIN barrio b ON a.id_barrio = b.id_barrio
                 WHERE a.user_id = ?  -- Filtrando por el user_id del arrendador
@@ -38,10 +38,68 @@ class Stats {
                 ORDER BY ua.start_date DESC;`, // Solo traer el arrendamiento más largo y reciente
                 [userId] // Pasa el userId del arrendador
             );
-            console.log("Resultados de la consulta:", results); // Para depuración
-            return results; // Devuelve los resultados obtenidos de la consulta
+            console.log("Resultados de la consulta:", results);
+            return results; 
         } catch (error) {
             console.error("Error en Stats.getStats:", error); // Manejo de errores
+            throw error;
+        }
+    }
+    // Método para obtener el arrendador con más apartamentos publicados
+    static async getTopLandlord() {
+        try {
+            const [results] = await db.query(
+                `SELECT 
+                    detalles_usuario.id_arrendador,
+                    detalles_usuario.nombre_completo,
+                    detalles_usuario.correo,
+                    publicaciones.total_apartamentos_publicados
+                FROM 
+                (
+                    SELECT 
+                        u.user_id AS id_arrendador,
+                        CONCAT(u.user_name, ' ', IFNULL(u.user_lastname, '')) AS nombre_completo,
+                        u.user_email AS correo
+                    FROM 
+                        users u
+                    WHERE 
+                        EXISTS (
+                            SELECT 1 
+                            FROM apartments a 
+                            WHERE a.user_id = u.user_id
+                        )
+                ) AS detalles_usuario
+                JOIN 
+                (
+                    SELECT 
+                        a.user_id AS id_arrendador,
+                        COUNT(a.id_apt) AS total_apartamentos_publicados
+                    FROM 
+                        apartments a
+                    GROUP BY 
+                        a.user_id
+                ) AS publicaciones
+                ON 
+                    detalles_usuario.id_arrendador = publicaciones.id_arrendador
+                WHERE 
+                    publicaciones.total_apartamentos_publicados = (
+                        SELECT 
+                            MAX(apartamentos_contados.total_apartamentos)
+                        FROM 
+                        (
+                            SELECT 
+                                user_id, COUNT(id_apt) AS total_apartamentos
+                            FROM 
+                                apartments
+                            GROUP BY 
+                                user_id
+                        ) AS apartamentos_contados
+                    );`
+            );
+            console.log("Arrendador/es con más apartamentos publicados:", results); // Para depuración
+            return results; // Devuelve el resultado
+        } catch (error) {
+            console.error("Error en Stats.getTopLandlord:", error); // Manejo de errores
             throw error;
         }
     }

@@ -20,3 +20,12 @@ export const fetchUserStats = async (token) => {
         throw error;
     }
 };
+export const fetchTopLandlord = async () => {
+    try {
+        const response = await axios.get(`${API_URL}/stats/get-top-landlord`);
+        return response.data;
+    } catch (error) {
+        console.error('Error al obtener el top arrendador:', error);
+        throw error;
+    }
+};

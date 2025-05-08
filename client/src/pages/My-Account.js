@@ -64,7 +64,7 @@ function MyAccount() {
                             style={{ cursor: "pointer", display: "flex", alignItems: "center", margin: "10px 0" }}
                         >
                             <FontAwesomeIcon icon={faStar} style={{ marginRight: "10px" }} />
-                            Mis reseñas
+                            Reseñas
                         </li>
                         <li 
                             onClick={() => setActiveTab("historial")} 
