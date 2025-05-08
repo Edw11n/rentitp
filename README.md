@@ -49,4 +49,6 @@ Este proyecto incluye archivos Dockerfile para el frontend (`client/`) y backend
 
 ## Autor
 
+Edw11n
 19jairo
+
