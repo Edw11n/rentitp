@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faFileInvoiceDollar, faStar, faHistory, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import { faUser, faFileInvoiceDollar, faStar, faHistory, faTrashAlt, faChartBar } from "@fortawesome/free-solid-svg-icons";
 import User from '../components/My-Account/User';
 import Billing from '../components/My-Account/Billing';
 import Stats from '../components/My-Account/Record';
@@ -56,7 +56,7 @@ function MyAccount() {
                             onClick={() => setActiveTab("estadisticas")} 
                             style={{ cursor: "pointer", display: "flex", alignItems: "center", margin: "10px 0" }}
                         >
-                            <FontAwesomeIcon icon={faStar} style={{ marginRight: "10px" }} />
+                            <FontAwesomeIcon icon={faChartBar} style={{ marginRight: "10px" }} />
                             Estadísticas
                         </li>
                         <li 
