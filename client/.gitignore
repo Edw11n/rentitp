@@ -4,7 +4,6 @@
 .env
 /.pnp
 .pnp.js
-dockerfile
 
 
 #certificado de ssl
