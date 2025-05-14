@@ -1,0 +1,9 @@
+services:
+  js-client:
+    build:
+      context: ./client
+    image: js-client:prod
+    container_name: js-client-prod
+    restart: unless-stopped
+    ports:
+      - "80:80"
