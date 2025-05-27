@@ -2,7 +2,7 @@ FROM node:20
 
 WORKDIR /app
 
-# Especifica la plataforma y arquitectura explícitamente (incluso si usas BuildKit)
+# Especifica la plataforma y arquitectura explícitamente
 ENV npm_config_platform=linux
 ENV npm_config_arch=x64
 
