@@ -1,32 +1,26 @@
-# syntax=docker/dockerfile:1
+FROM node:20
 
-ARG NODE_VERSION=22.13.1
-FROM node:${NODE_VERSION}-slim AS base
 WORKDIR /app
 
-# Install dependencies (production only)
-RUN --mount=type=cache,target=/root/.npm \
-    --mount=type=bind,source=package.json,target=package.json \
-    --mount=type=bind,source=package-lock.json,target=package-lock.json \
-    npm ci --production
+# Especifica la plataforma y arquitectura explícitamente (incluso si usas BuildKit)
+ENV npm_config_platform=linux
+ENV npm_config_arch=x64
 
-# Copy application files (excluding .env, .git, lock files, etc.)
-COPY --link . .
+# Instala dependencias del sistema para sharp
+RUN apt-get update && apt-get install -y \
+    libvips-dev \
+    && rm -rf /var/lib/apt/lists/*
 
-# Create a non-root user
-RUN addgroup --system appgroup && adduser --system --ingroup appgroup appuser
+# Copia solo los archivos de dependencias primero
+COPY package*.json ./
 
-# Expose the ports used by the app (HTTP and HTTPS)
-EXPOSE 3001 3443
+# Instala sharp con flags explícitos y omite opcionales no necesarios
+RUN npm install --include=optional sharp --os=linux --cpu=x64 sharp
+RUN npm install
 
-# Set environment variables
-ENV NODE_ENV=production
-ENV NODE_OPTIONS="--max-old-space-size=4096"
+# Copia el resto de la aplicación
+COPY . .
 
-# Set permissions for uploads and certs directories
-RUN mkdir -p /app/uploads /app/certs && \
-    chown -R appuser:appgroup /app/uploads /app/certs
-
-USER appuser
+EXPOSE 3443
 
 CMD ["npm", "start"]

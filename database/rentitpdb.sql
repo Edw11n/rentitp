@@ -114,6 +114,11 @@ CREATE TABLE IF NOT EXISTS `user_rol` (
   CONSTRAINT `FK_user_rol_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+INSERT INTO `rol` (`rol_id`, `rol`) VALUES
+(1, 'usuario'),
+(2, 'arrendador'),
+(3, 'admin');
+
 -- La exportación de datos fue deseleccionada.
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;

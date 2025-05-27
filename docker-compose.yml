@@ -7,3 +7,54 @@ services:
     restart: unless-stopped
     ports:
       - "80:80"
+    env_file:
+      - ./client/.env
+    depends_on:
+      - server
+    networks:
+      - rentitp-network
+
+  server:
+    build:
+      context: ./server
+    image: rentitp-server:prod
+    container_name: rentitp-server
+    restart: unless-stopped
+    ports:
+      - "3443:3443"
+    env_file:
+      - ./server/.env
+    volumes:
+      - ./server:/app
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - rentitp-network
+
+  mysql:
+    image: mysql:8.0
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p$MYSQL_ROOT_PASSWORD || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    container_name: mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: wasd123
+      MYSQL_DATABASE: rentitpdb
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./database/rentitpdb.sql:/docker-entrypoint-initdb.d/init.sql
+      - mysql_data:/var/lib/mysql
+    networks:
+      - rentitp-network
+
+volumes:
+  mysql_data:
+
+networks:
+  rentitp-network:
+    driver: bridge

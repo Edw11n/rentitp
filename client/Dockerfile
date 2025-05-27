@@ -1,8 +1,9 @@
 # Etapa 1: construir la app
-FROM node:18 AS builder
+FROM node:20 AS builder
 
 WORKDIR /app
 COPY . .
+COPY .env .env
 RUN npm install
 RUN npm run build
 
