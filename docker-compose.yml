@@ -1,8 +1,6 @@
 services:
   js-client:
-    build:
-      context: ./client
-    image: js-client:prod
+    image: edw11n/js-client:prod
     container_name: js-client-prod
     restart: unless-stopped
     ports:
@@ -15,17 +13,13 @@ services:
       - rentitp-network
 
   server:
-    build:
-      context: ./server
-    image: rentitp-server:prod
+    image: edw11n/rentitp-server:prod
     container_name: rentitp-server
     restart: unless-stopped
     ports:
       - "3443:3443"
     env_file:
       - ./server/.env
-    volumes:
-      - ./server:/app
     depends_on:
       mysql:
         condition: service_healthy
