@@ -1,0 +1,403 @@
+/* ESTILOS PARA SUCCESSMODAL.JS */
+/* modals.css - SuccessModal */
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.modal-content {
+    background: white;
+    padding: 3rem;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    max-width: 500px;
+    width: 90%;
+    border: 2px solid;
+    border-image: linear-gradient(135deg, #4F46E5 0%, #818CF8 100%) 1;
+    animation: modalEnter 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes modalEnter {
+    from {
+        transform: scale(0.95);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.success-icon {
+    color: #10B981;
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    filter: drop-shadow(0 4px 6px rgba(16, 185, 129, 0.15));
+}
+
+.modal-content h2 {
+    color: #2c3e50;
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.modal-content p {
+    color: #4a5568;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+.modal-content button {
+    padding: 1rem 2.5rem;
+    background: linear-gradient(135deg, #4F46E5 0%, #818CF8 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.1rem;
+}
+
+.modal-content button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(79, 70, 229, 0.2);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .modal-content {
+        padding: 2rem;
+    }
+    
+    .success-icon {
+        font-size: 3rem;
+    }
+    
+    .modal-content h2 {
+        font-size: 1.5rem;
+    }
+    
+    .modal-content p {
+        font-size: 0.95rem;
+    }
+    
+    .modal-content button {
+        width: 100%;
+        padding: 1rem;
+    }
+}
+/* =================================================================*/
+/* ESTILOS PARA JOIN.JS */
+  /* ===== Estilo Principal del Modal ===== */
+.join {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.join-content {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    padding: 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    max-width: 500px;
+    width: 90%;
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* ===== Icono de Cierre ===== */
+.close-icon {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    color: #4a5568;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.9);
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.close-icon:hover {
+    background: #f1f5f9;
+    transform: rotate(90deg);
+    color: #EF4444;
+}
+
+/* ===== Contenido de Opciones ===== */
+.join-options-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-top: 1.5rem;
+}
+
+.signup-case, .login-case {
+    text-align: center;
+    padding: 1.5rem;
+    background: #f8fafc;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    transition: transform 0.3s ease;
+}
+
+.signup-case:hover, .login-case:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.signup-case p, .login-case p {
+    color: #4a5568;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+/* ===== Botones ===== */
+.signup-button, .login-button {
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+.signup-button {
+    background: linear-gradient(135deg, #4F46E5 0%, #818CF8 100%);
+    color: white;
+}
+
+.login-button {
+    background: linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%);
+    color: white;
+}
+
+.signup-button:hover, .login-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.signup-button:active, .login-button:active {
+    transform: translateY(0);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+    .join-content {
+        padding: 1.5rem;
+    }
+    
+    .join-options-content {
+        gap: 1.5rem;
+    }
+    
+    .signup-case, .login-case {
+        padding: 1rem;
+    }
+    
+    .close-icon {
+        top: 1rem;
+        right: 1rem;
+    }
+}
+
+/* =================================================================*/
+/* ESTILOS PARA ACCOUNT.JS */
+/* ===== Estilo Principal ===== */
+.account {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.account-container {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    max-width: 500px;
+    width: 90%;
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.account-container h2 {
+    color: #2c3e50;
+    font-size: 1.75rem;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* ===== Información de Usuario ===== */
+.role {
+    background: #eef2ff;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    display: inline-block;
+    font-weight: 500;
+    color: #4F46E5;
+    margin-bottom: 1.5rem;
+}
+
+.user-info {
+    background: #f8fafc;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin: 1.5rem 0;
+    border: 1px solid #e2e8f0;
+}
+
+.user-info p {
+    margin: 0.8rem 0;
+    color: #4a5568;
+    font-size: 1rem;
+}
+
+.user-info strong {
+    color: #2c3e50;
+    font-weight: 500;
+}
+
+/* ===== Botones y Acciones ===== */
+.go-to-dashboard {
+    color: #3B82F6;
+    cursor: pointer;
+    padding: 0.8rem;
+    border-radius: 8px;
+    transition: all 0.2s;
+    text-align: center;
+    margin: 1rem 0;
+    border: 1px solid #e2e8f0;
+}
+
+.go-to-dashboard:hover {
+    background: #eef2ff;
+    transform: translateY(-1px);
+}
+
+.logout-button {
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(135deg, #EF4444 0%, #F87171 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 1rem;
+}
+
+.logout-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(239, 68, 68, 0.2);
+}
+
+/* ===== Diálogo de Confirmación ===== */
+.confirm-logout-dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    z-index: 1001;
+}
+
+.confirm-logout-dialog p {
+    color: #4a5568;
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
+}
+
+.confirm-logout-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.logout-confirm-btn,
+.logout-cancel-btn {
+    padding: 0.8rem 2rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.logout-confirm-btn {
+    background: linear-gradient(135deg, #EF4444 0%, #F87171 100%);
+    color: white;
+}
+
+.logout-cancel-btn {
+    background: linear-gradient(135deg, #64748B 0%, #94A3B8 100%);
+    color: white;
+}
+
+.logout-confirm-btn:hover,
+.logout-cancel-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+    .account-container {
+        padding: 1.5rem;
+    }
+    
+    .account-container h2 {
+        font-size: 1.5rem;
+    }
+    
+    .user-info {
+        padding: 1rem;
+    }
+}

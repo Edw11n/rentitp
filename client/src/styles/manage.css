@@ -1,0 +1,338 @@
+.manage-container {
+    padding: 2rem;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    min-height: 100vh;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #2c3e50;
+    font-size: 2.5rem;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+}
+
+.apartment-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.apartment-item {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+}
+
+.apartment-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.download-buttons {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.pdf-btn, .excel-btn {
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: #a0a0a0;
+    color: white;
+    transition: all 0.2s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.pdf-btn:hover {
+    background: #FF4757;
+    color: white;
+}
+
+.excel-btn:hover {
+    background: #2ED573;
+    color: white;
+}
+
+.apartment-details {
+    margin: 1.5rem 0;
+    color: #4a5568;
+}
+
+.apartment-details p {
+    margin: 0.8rem 0;
+    font-size: 1rem;
+}
+
+.apartment-details strong {
+    color: #2d3748;
+    font-weight: 600;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+}
+
+.edit-btn, .delete-btn {
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+}
+
+.edit-btn {
+    background: linear-gradient(135deg, #4F46E5 0%, #818CF8 100%);
+    color: white;
+}
+
+.delete-btn {
+    background: linear-gradient(135deg, #EF4444 0%, #F87171 100%);
+    color: white;
+}
+
+.edit-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(79, 70, 229, 0.2);
+}
+
+.delete-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(239, 68, 68, 0.2);
+}
+
+.edit-apartment-form {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 1rem 0;
+    border: 1px solid #e2e8f0;
+}
+
+.edit-apartment-form input,
+.edit-apartment-form textarea {
+    width: 100%;
+    padding: 0.8rem;
+    margin-bottom: 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+}
+.edit-form-textarea {
+    resize: vertical;
+}
+.edit-apartment-form input:focus,
+.edit-apartment-form textarea:focus {
+    border-color: #818CF8;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.2);
+}
+
+.edit-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.update-btn, .cancel-btn {
+    flex: 1;
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.update-btn {
+    background: linear-gradient(135deg, #10B981 0%, #34D399 100%);
+    color: white;
+}
+
+.cancel-btn {
+    background: linear-gradient(135deg, #64748B 0%, #94A3B8 100%);
+    color: white;
+}
+
+.update-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(16, 185, 129, 0.2);
+}
+
+
+
+.view-image-button,
+.remove-image-button {
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.view-image-button {
+    background: #3B82F6;
+    color: white;
+}
+
+.view-image-button:hover {
+    background: #2563EB;
+    transform: scale(1.1);
+}
+
+.remove-image-button {
+    background: #EF4444;
+    color: white;
+}
+
+.remove-image-button:hover {
+    background: #DC2626;
+    transform: scale(1.1);
+}
+
+.view-image-button svg,
+.remove-image-button svg {
+    font-size: 0.9rem;
+}
+
+.refresh-btn {
+    display: block;
+    margin: 1rem auto 2rem;
+    padding: 0.8rem 2rem;
+    background: linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.refresh-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(59, 130, 246, 0.2);
+}
+
+/* Efectos modernos para las imágenes */
+
+/* ... (todo el CSS anterior se mantiene igual) ... */
+
+/* ===== Estilos para Imágenes en Listado ===== */
+.edit-images-section {
+    margin: 1rem 0;
+    padding: 1rem;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+}
+
+.image-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.image-list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.8rem;
+    background: #f8fafc;
+    border-radius: 8px;
+    transition: background 0.2s ease;
+}
+
+.image-list-item:hover {
+    background: #f1f5f9;
+}
+
+.image-name {
+    font-size: 0.95rem;
+    color: #4a5568;
+    max-width: 70%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* === Acciones de Imagen === */
+.image-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.view-image-button,
+.remove-image-button {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.view-image-button {
+    background: #3B82F6;
+    color: white;
+}
+
+.view-image-button:hover {
+    background: #2563EB;
+    transform: translateY(-1px);
+}
+
+.remove-image-button {
+    background: #EF4444;
+    color: white;
+}
+
+.remove-image-button:hover {
+    background: #DC2626;
+    transform: translateY(-1px);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+    .apartment-list {
+        grid-template-columns: 1fr;
+    }
+    
+    .apartment-item {
+        width: 100%;
+        margin: 0;
+    }
+    
+    .image-name {
+        max-width: 60%;
+    }
+}

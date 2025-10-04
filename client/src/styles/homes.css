@@ -1,0 +1,50 @@
+/* Home Container */
+.home-container {
+    display: flex;
+    height: calc(100vh - 82px); /* Ajusta según la altura de la navbar */
+    overflow: hidden; /* Oculta el scroll si no es necesario */
+}
+
+/* Mapa */
+.map-container {
+    flex: 3; /* El mapa ocupará el 75% del ancho */
+    height: 100%; /* Esto asegurará que use el 100% de la altura del contenedor padre */
+}
+
+/* Lista de Apartamentos */
+.apartment-list-container {
+    flex: 1; /* El componente ApartmentList ocupará el 25% del ancho */
+    height: 100%; /* Esto asegurará que use el 100% de la altura del contenedor padre */
+    padding: 10px;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1); /* Sombra para separar visualmente */
+}
+
+/* =================================================================* */
+/* ESTILOS PARA DASHBOARD.JS */
+.dashboard-container {
+    display: flex;
+    justify-content: space-between; /* Distribuye los componentes a ambos lados */
+    width: 100vw; /* Asegura que ocupe el ancho completo de la pantalla */
+    height: calc(100vh - 82px); /* Asegura que ocupe toda la altura de la pantalla */
+    overflow-y: hidden;
+}
+
+.form-section {
+    width: 30%; /* Ocupa el 50% del ancho */
+    padding: 0; /* Agrega algo de espacio interno */
+    box-sizing: border-box; /* Para que el padding no afecte el ancho total */
+    position: sticky; /* Hace que la sección del formulario se mantenga fija al desplazarse */
+    max-height: 100vh; /* Ajusta la altura máxima del formulario */
+    overflow-y: auto; /* Permite el scroll interno si el contenido del formulario es más largo */
+    background-color: #e0e0e0; /* Estilo del formulario */
+}
+
+.manage-section {
+    width: 70%; /* Ocupa el 50% del ancho */
+    padding: 0; /* Agrega algo de espacio interno */
+    box-sizing: border-box; /* Para que el padding no afecte el ancho total */
+    background-color: #e0e0e0; /* Opcional, estilos diferentes para diferenciarlas */
+    overflow-y: auto; /* Permite el scroll interno si el contenido es más largo */
+    height: 100vh; /* Asegura que ocupe toda la altura disponible */
+    overflow-x: visible;
+}
