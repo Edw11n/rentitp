@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ApartmentListController from "../apis/apartmentlistController";
 import ImageModal from "./ImageModal";
+import ChatComponent from "./ChatComponent"; // 👈 Importamos el chat
 import "../styles/apartments.css";
 
 function ApartmentList() {
@@ -11,6 +12,12 @@ function ApartmentList() {
     const [showModal, setShowModal] = useState(false);
     const [modalImages, setModalImages] = useState([]);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [showChat, setShowChat] = useState(false); // 👈 Nuevo estado para mostrar el chat
+    const [selectedLessor, setSelectedLessor] = useState(null); // 👈 ID del arrendador para el chat
+
+    // Obtenemos el usuario actual (emisor)
+    const currentUser = JSON.parse(localStorage.getItem("user")) || {};
+    const emisor_id = currentUser?.id;
 
     useEffect(() => {
         const fetchApartments = async () => {
@@ -31,7 +38,7 @@ function ApartmentList() {
 
         if (lat && lng) {
             localStorage.setItem("mapCenter", JSON.stringify([lat, lng]));
-            window.dispatchEvent(new Event("storage")); // Disparar evento para actualizar el mapa
+            window.dispatchEvent(new Event("storage"));
         }
     };
 
@@ -59,6 +66,16 @@ function ApartmentList() {
         setCurrentImageIndex((prevIndex) =>
             prevIndex === modalImages.length - 1 ? 0 : prevIndex + 1
         );
+    };
+
+    const openChat = (lessorId) => {
+        setSelectedLessor(lessorId);
+        setShowChat(true);
+    };
+
+    const closeChat = () => {
+        setShowChat(false);
+        setSelectedLessor(null);
     };
 
     return (
@@ -96,6 +113,7 @@ function ApartmentList() {
                             <div className="apartment-details">
                                 <p className="details-header">Detalles del apartamento:</p>
                                 <p>Información adicional: {apartment.info_add_apt}</p>
+
                                 {apartment.images && apartment.images.length > 0 && (
                                     <p
                                         className="view-images"
@@ -111,6 +129,7 @@ function ApartmentList() {
                                         Ver imágenes
                                     </p>
                                 )}
+
                                 <p className="lessor-info-header">
                                     <b>Información del arrendador</b>
                                 </p>
@@ -119,6 +138,14 @@ function ApartmentList() {
                                 </p>
                                 <p>Email: {apartment.user_email}</p>
                                 <p>Teléfono: {apartment.user_phonenumber}</p>
+
+                                {/* 👇 Botón para abrir el chat */}
+                                <button
+                                    className="chat-button"
+                                    onClick={() => openChat(apartment.user_id)}
+                                >
+                                    💬 Chatear con el arrendador
+                                </button>
                             </div>
                         )}
                     </div>
@@ -127,6 +154,7 @@ function ApartmentList() {
                 <p className="empty-list-message">No hay apartamentos disponibles</p>
             )}
 
+            {/* Modal de imágenes */}
             {showModal && (
                 <ImageModal
                     images={modalImages}
@@ -135,6 +163,16 @@ function ApartmentList() {
                     onPrev={handlePrevImage}
                     onNext={handleNextImage}
                 />
+            )}
+
+            {/* Modal de chat */}
+            {showChat && (
+                <div className="chat-modal">
+                    <div className="chat-modal-content">
+                        <button className="close-chat" onClick={closeChat}>✖</button>
+                        <ChatComponent emisor_id={emisor_id} receptor_id={selectedLessor} />
+                    </div>
+                </div>
             )}
         </div>
     );
