@@ -1,0 +1,57 @@
+.map-modal-overlay {
+  position: fixed; /* 🔹 fijo sobre toda la pantalla */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999; /* 🔹 alto para estar encima de todo */
+}
+
+.map-modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 600px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  position: relative; /* necesario para que el botón de cerrar se posicione */
+  text-align: center;
+}
+
+.map-close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  background: none;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 10000; /* 🔹 asegurarse que el botón también quede encima */
+}
+
+.map-title {
+  margin-bottom: 10px;
+}
+
+.map-coords {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.map-accept-button {
+  margin-top: 15px;
+  background-color: #0069d9;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.map-accept-button:hover {
+  background-color: #0053b3;
+}
