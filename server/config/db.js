@@ -26,3 +26,6 @@ async function testConnection() {
 testConnection();
 
 module.exports = pool;
+
+console.log(" Base de datos iniciada - debug temporal");
+

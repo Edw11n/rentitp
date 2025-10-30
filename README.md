@@ -152,3 +152,7 @@ Problemas comunes :
 
 &nbsp;  - Solución: Asegurar que REACT\_APP\_API\_URL en el frontend y ALLOWED\_ORIGINS en el backend apunten a los puertos correctos (3000 y 3443/3001).
 
+### Update
+Proyecto configurado correctamente y conexión a MySQL verificada.
+
+
