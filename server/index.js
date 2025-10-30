@@ -16,8 +16,13 @@ const privateKey = fs.readFileSync(path.join(__dirname, 'certs/key.pem'), 'utf8'
 const certificate = fs.readFileSync(path.join(__dirname, 'certs/cert.pem'), 'utf8');
 const credentials = { key: privateKey, cert: certificate };
 
+// === Origin CORS permitido ===
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+    ? process.env.ALLOWED_ORIGINS.split(',')
+    : ['*'];
+
 app.use(cors({
-    origin: process.env.FRONTEND_URL || '*',
+    origin: allowedOrigins,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     exposedHeaders: ['Content-Disposition'],
