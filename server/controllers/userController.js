@@ -81,9 +81,6 @@ exports.signup = async (req, res) => {
         if (existingUser) {
             return res.status(409).json({ error: 'El usuario ya está registrado' });
         }
-
-        // Hashear la contraseña antes de guardarla
-        const hashedPassword = await bcrypt.hash(password, 10);
         
         // Crear usuario
         const newUser = await User.signup({
@@ -91,7 +88,7 @@ exports.signup = async (req, res) => {
             apellido,
             email,
             telefono,
-            password: hashedPassword,
+            password,
             rolId
         });
 
