@@ -37,7 +37,7 @@ export default function MapModal({ onClose, onSelectLocation, initialCoords }) {
         <h3 className="map-title">Selecciona la ubicación del apartamento</h3>
 
         <MapContainer
-          center={selected || [1.152, -77.281]} // 🌍 Mocoa por defecto
+          center={selected || [1.157037, -76.651443]} // Mocoa por defecto
           zoom={14}
           style={{ height: "400px", width: "100%", borderRadius: "8px" }}
         >
