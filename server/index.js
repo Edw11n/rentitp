@@ -7,6 +7,7 @@ const http = require('http');
 const path = require('path');
 const helmet = require('helmet');
 const { Server } = require('socket.io');
+const importDatabase = require('./utils/importaDatabase');
 require('dotenv').config();
 
 const app = express();
@@ -134,16 +135,64 @@ io.on("connection", (socket) => {
     });
 });
 
-// Start HTTPS server
-httpsServer.listen(SSL_PORT, () => {
-    console.log(`🔐 Servidor HTTPS activo con chat en https://localhost:${SSL_PORT}`);
-});
-
 // Redirect HTTP -> HTTPS
 const redirectApp = express();
 redirectApp.use((req, res) => {
     res.redirect(`https://localhost:${SSL_PORT}${req.url}`);
 });
-http.createServer(redirectApp).listen(HTTP_PORT, () => {
-    console.log(`➡️ Redirigiendo HTTP (${HTTP_PORT}) → HTTPS (${SSL_PORT})`);
-});
+
+// Función para verificar si un puerto está en uso
+async function isPortInUse(port) {
+    return new Promise((resolve) => {
+        const server = require('net').createServer();
+        server.once('error', (err) => {
+            if (err.code === 'EADDRINUSE') resolve(true);
+            else resolve(false);
+        });
+        server.once('listening', () => {
+            server.close();
+            resolve(false);
+        });
+        server.listen(port);
+    });
+}
+
+// Arranque encapsulado para poder ejecutar importación antes de levantar servidores
+(async function start() {
+    try {
+        // 1. Verificar puertos
+        const [httpsInUse, httpInUse] = await Promise.all([
+            isPortInUse(SSL_PORT),
+            isPortInUse(HTTP_PORT)
+        ]);
+
+        if (httpsInUse) {
+            throw new Error(`Puerto HTTPS ${SSL_PORT} en uso. Detén otros servidores primero.`);
+        }
+        if (httpInUse) {
+            throw new Error(`Puerto HTTP ${HTTP_PORT} en uso. Detén otros servidores primero.`);
+        }
+
+        // 2. Importar base de datos
+        try {
+            console.log('🔄 Importando base de datos...');
+            await importDatabase();
+        } catch (dbErr) {
+            console.error('⚠️ Error importando base de datos:', dbErr.message);
+            console.log('🚀 Continuando con el inicio del servidor...');
+        }
+
+        // 3. Iniciar servidores
+        httpsServer.listen(SSL_PORT, () => {
+            console.log(`🔐 Servidor HTTPS activo con chat en https://localhost:${SSL_PORT}`);
+        });
+
+        http.createServer(redirectApp).listen(HTTP_PORT, () => {
+            console.log(`➡️ Redirigiendo HTTP (${HTTP_PORT}) → HTTPS (${SSL_PORT})`);
+        });
+
+    } catch (err) {
+        console.error('❌ Error iniciando servidor:', err.message);
+        process.exit(1); // Salir con error para que nodemon reinicie
+    }
+})();

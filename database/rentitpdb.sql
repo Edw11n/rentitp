@@ -5,19 +5,65 @@
 -- HeidiSQL Versión:             12.1.0.6537
 -- --------------------------------------------------------
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET NAMES utf8 */;
-/*!50503 SET NAMES utf8mb4 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+-- Configuración de caracteres y variables de sesión
+SET @OLD_CHARACTER_SET_CLIENT = @@CHARACTER_SET_CLIENT;
+SET @OLD_CHARACTER_SET_RESULTS = @@CHARACTER_SET_RESULTS;
+SET @OLD_COLLATION_CONNECTION = @@COLLATION_CONNECTION;
+SET @OLD_TIME_ZONE = @@TIME_ZONE;
+SET @OLD_FOREIGN_KEY_CHECKS = @@FOREIGN_KEY_CHECKS;
+SET @OLD_SQL_MODE = @@SQL_MODE;
+SET @OLD_SQL_NOTES = @@SQL_NOTES;
 
+-- Establecer nuevos valores
+SET NAMES utf8mb4;
+SET character_set_client = utf8mb4;
+SET character_set_results = utf8mb4;
+SET character_set_connection = utf8mb4;
+SET collation_connection = utf8mb4_unicode_ci;
+SET time_zone = '+00:00';
+SET foreign_key_checks = 0;
+SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
+SET sql_notes = 0;
 
 -- Volcando estructura de base de datos para rentitpdb
-CREATE DATABASE IF NOT EXISTS `rentitpdb` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+CREATE DATABASE IF NOT EXISTS `rentitpdb` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */;
 USE `rentitpdb`;
+
+-- Volcando estructura para tabla rentitpdb.rol
+DROP TABLE IF EXISTS `user_rol`;
+DROP TABLE IF EXISTS `user_apartment`;
+DROP TABLE IF EXISTS `apartment_images`;
+DROP TABLE IF EXISTS `apartments`;
+DROP TABLE IF EXISTS `barrio`;
+DROP TABLE IF EXISTS `mensajes`;
+DROP TABLE IF EXISTS `users`;
+DROP TABLE IF EXISTS `rol`;
+
+CREATE TABLE IF NOT EXISTS `rol` (
+  `rol_id` int NOT NULL AUTO_INCREMENT,
+  `rol` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  PRIMARY KEY (`rol_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;
+
+-- Volcando estructura para tabla rentitpdb.users
+CREATE TABLE IF NOT EXISTS `users` (
+  `user_id` int NOT NULL AUTO_INCREMENT,
+  `user_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `user_lastname` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `user_email` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `user_phonenumber` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `user_password` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `user_google_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  PRIMARY KEY (`user_id`),
+  UNIQUE KEY `user_email` (`user_email`)
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;
+
+-- Volcando estructura para tabla rentitpdb.barrio
+CREATE TABLE IF NOT EXISTS `barrio` (
+  `id_barrio` int NOT NULL AUTO_INCREMENT,
+  `barrio` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  PRIMARY KEY (`id_barrio`)
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;
 
 -- Volcando estructura para tabla rentitpdb.apartments
 CREATE TABLE IF NOT EXISTS `apartments` (
@@ -33,56 +79,18 @@ CREATE TABLE IF NOT EXISTS `apartments` (
   KEY `fk_user` (`user_id`),
   CONSTRAINT `FK_apartments_barrio` FOREIGN KEY (`id_barrio`) REFERENCES `barrio` (`id_barrio`) ON DELETE CASCADE,
   CONSTRAINT `fk_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- La exportación de datos fue deseleccionada.
+) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;
 
 -- Volcando estructura para tabla rentitpdb.apartment_images
 CREATE TABLE IF NOT EXISTS `apartment_images` (
   `id_img` int NOT NULL AUTO_INCREMENT,
-  `imagen` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `iv` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `imagen` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `iv` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `id_apt` int NOT NULL,
   PRIMARY KEY (`id_img`),
   KEY `FK_apartment_images_apartments` (`id_apt`),
   CONSTRAINT `FK_apartment_images_apartments` FOREIGN KEY (`id_apt`) REFERENCES `apartments` (`id_apt`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=96 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- La exportación de datos fue deseleccionada.
-
--- Volcando estructura para tabla rentitpdb.barrio
-CREATE TABLE IF NOT EXISTS `barrio` (
-  `id_barrio` int NOT NULL AUTO_INCREMENT,
-  `barrio` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  PRIMARY KEY (`id_barrio`)
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- La exportación de datos fue deseleccionada.
-
--- Volcando estructura para tabla rentitpdb.rol
-CREATE TABLE IF NOT EXISTS `rol` (
-  `rol_id` int NOT NULL AUTO_INCREMENT,
-  `rol` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  PRIMARY KEY (`rol_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- La exportación de datos fue deseleccionada.
-
--- Volcando estructura para tabla rentitpdb.users
-CREATE TABLE IF NOT EXISTS `users` (
-  `user_id` int NOT NULL AUTO_INCREMENT,
-  `user_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `user_lastname` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `user_email` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `user_phonenumber` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `user_password` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `user_google_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  PRIMARY KEY (`user_id`),
-  UNIQUE KEY `user_email` (`user_email`),
-  UNIQUE KEY `user_email_2` (`user_email`)
-) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- La exportación de datos fue deseleccionada.
+) ENGINE=InnoDB AUTO_INCREMENT=96 DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;
 
 -- Volcando estructura para tabla rentitpdb.user_apartment
 CREATE TABLE IF NOT EXISTS `user_apartment` (
@@ -96,11 +104,10 @@ CREATE TABLE IF NOT EXISTS `user_apartment` (
   KEY `FK_user_apartment_apartments` (`id_apt`),
   CONSTRAINT `FK_user_apartment_apartments` FOREIGN KEY (`id_apt`) REFERENCES `apartments` (`id_apt`) ON DELETE CASCADE,
   CONSTRAINT `FK_user_apartment_user` FOREIGN KEY (`id_user`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- La exportación de datos fue deseleccionada.
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;
 
 -- Volcando estructura para tabla rentitpdb.user_rol
+DROP TABLE IF EXISTS `user_rol`;
 CREATE TABLE IF NOT EXISTS `user_rol` (
   `id_user_rol` int NOT NULL AUTO_INCREMENT,
   `user_id` int NOT NULL,
@@ -112,17 +119,35 @@ CREATE TABLE IF NOT EXISTS `user_rol` (
   KEY `FK_user_rol_rol` (`rol_id`) USING BTREE,
   CONSTRAINT `FK_rol_rol_user` FOREIGN KEY (`rol_id`) REFERENCES `rol` (`rol_id`) ON DELETE CASCADE,
   CONSTRAINT `FK_user_rol_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;
 
-INSERT INTO `rol` (`rol_id`, `rol`) VALUES
+-- Volcando estructura para tabla rentitpdb.mensajes
+DROP TABLE IF EXISTS `mensajes`;
+CREATE TABLE IF NOT EXISTS `mensajes` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `emisor_id` int NOT NULL,
+  `receptor_id` int NOT NULL,
+  `contenido` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `fecha_envio` datetime DEFAULT CURRENT_TIMESTAMP,
+  `leido` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `FK_cliente_mensajes` (`emisor_id`),
+  KEY `FK_mensaje_receptor` (`receptor_id`),
+  CONSTRAINT `FK_cliente_mensajes` FOREIGN KEY (`emisor_id`) REFERENCES `users` (`user_id`),
+  CONSTRAINT `FK_mensaje_receptor` FOREIGN KEY (`receptor_id`) REFERENCES `users` (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Insertando datos iniciales
+INSERT IGNORE INTO `rol` (`rol_id`, `rol`) VALUES
 (1, 'usuario'),
 (2, 'arrendador'),
 (3, 'admin');
 
--- La exportación de datos fue deseleccionada.
-
-/*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
-/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
-/*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40111 SET SQL_NOTES=IFNULL(@OLD_SQL_NOTES, 1) */;
+-- Restaurar valores originales de manera segura
+SET character_set_client = COALESCE(@OLD_CHARACTER_SET_CLIENT, 'utf8mb4');
+SET character_set_results = COALESCE(@OLD_CHARACTER_SET_RESULTS, 'utf8mb4');
+SET collation_connection = COALESCE(@OLD_COLLATION_CONNECTION, 'utf8mb4_unicode_ci');
+SET time_zone = COALESCE(@OLD_TIME_ZONE, 'system');
+SET foreign_key_checks = COALESCE(@OLD_FOREIGN_KEY_CHECKS, 1);
+SET sql_mode = COALESCE(@OLD_SQL_MODE, '');
+SET sql_notes = COALESCE(@OLD_SQL_NOTES, 1);
