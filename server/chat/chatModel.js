@@ -33,6 +33,47 @@ const ChatModel = {
     `;
     const [rows] = await db.query(sql, [emisor_id, receptor_id, receptor_id, emisor_id]);
     return rows;
+  },
+
+  async obtenerConversacionesArrendador(arrendador_id) {
+    // Normalizamos cada conversación por pareja (emisor, receptor) usando LEAST/GREATEST
+    // para asegurar una única fila por conversación. Además, eliminamos el join con apartments
+    // que generaba duplicados cuando el arrendador tenía varios apartamentos.
+    const sql = `
+      SELECT
+        u.user_id AS usuario_id,
+        u.user_name AS usuario_nombre,
+        u.user_lastname AS usuario_apellido,
+        u.user_email AS usuario_email,
+        m2.contenido AS ultimo_mensaje,
+        conv.ultimo_mensaje_fecha,
+        (
+          SELECT COUNT(*) FROM mensajes m3
+          WHERE m3.emisor_id = u.user_id
+            AND m3.receptor_id = ?
+            AND m3.leido = FALSE
+        ) AS mensajes_no_leidos
+      FROM (
+        SELECT
+          CASE WHEN emisor_id = ? THEN receptor_id ELSE emisor_id END AS otro_id,
+          MAX(fecha_envio) AS ultimo_mensaje_fecha,
+          MAX(id) AS ultimo_mensaje_id,
+          LEAST(emisor_id, receptor_id) AS p1,
+          GREATEST(emisor_id, receptor_id) AS p2
+        FROM mensajes
+        WHERE emisor_id = ? OR receptor_id = ?
+        GROUP BY LEAST(emisor_id, receptor_id), GREATEST(emisor_id, receptor_id)
+      ) AS conv
+      INNER JOIN users u ON u.user_id = conv.otro_id
+      INNER JOIN mensajes m2 ON m2.id = conv.ultimo_mensaje_id
+      ORDER BY conv.ultimo_mensaje_fecha DESC
+    `;
+    const [rows] = await db.query(sql, [
+      arrendador_id,
+      arrendador_id,
+      arrendador_id, arrendador_id
+    ]);
+    return rows;
   }
 };
 

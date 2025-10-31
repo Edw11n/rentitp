@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import SucessModal from '../components/SuccessModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faUser, faEnvelope, faPhone, faLock, faUserTie, faHome } from '@fortawesome/free-solid-svg-icons';
 import '../styles/log.css';
 import { signupUser } from '../apis/signupController'; // Importa el controlador
 import { UserContext } from "../contexts/UserContext";
@@ -88,79 +88,155 @@ function Signup() {
         }
     return (
         <div className="container">
-            <FontAwesomeIcon icon={faTimes} className="exit-icon" onClick={goToHome} />
+            <button className="exit-icon" onClick={goToHome} aria-label="Volver al inicio">
+                <FontAwesomeIcon icon={faTimes} />
+            </button>
             
             <div className="visual-section">
                 <div className="visual-content">
+                    <div className="icon-wrapper">
+                        <FontAwesomeIcon icon={faHome} className="home-icon" />
+                    </div>
                     <h1>Únete a nuestra comunidad</h1>
                     <p>Encuentra o ofrece el alojamiento perfecto cerca de tu universidad</p>
+                    <div className="features-list">
+                        <div className="feature-item">
+                            <span className="check-icon">✓</span>
+                            <span>Busca propiedades verificadas</span>
+                        </div>
+                        <div className="feature-item">
+                            <span className="check-icon">✓</span>
+                            <span>Conecta con propietarios directamente</span>
+                        </div>
+                        <div className="feature-item">
+                            <span className="check-icon">✓</span>
+                            <span>Gestiona tus propiedades fácilmente</span>
+                        </div>
+                    </div>
                 </div>
             </div>
             
             <div className="div-container">
                 <div className="title">
                     <h2>Crea tu cuenta</h2>
+                    <p className="subtitle">Únete a miles de estudiantes y propietarios</p>
                 </div>
+
                 <div className="google-login-container">
-                        <GoogleLogin 
-                            onSuccess={handleGoogleLogin}
-                            onError={() => setMessage('Error en el login con Google')}
-                        />
-                        <p className="google-text">O</p>
-                    </div>
+                    <GoogleLogin 
+                        onSuccess={handleGoogleLogin}
+                        onError={() => setMessage('Error en el login con Google')}
+                    />
+                    <p className="google-text">O regístrate con tu email</p>
+                </div>
+
                 <div className="input-grid">
                     <div className="input-group">
-                        <label>Nombre</label>
-                        <input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} />
+                        <label><FontAwesomeIcon icon={faUser} className="input-icon" /> Nombre</label>
+                        <input 
+                            type="text" 
+                            value={nombre} 
+                            onChange={(e) => setNombre(e.target.value)} 
+                            placeholder="Tu nombre"
+                        />
                     </div>
                     
                     <div className="input-group">
-                        <label>Apellido</label>
-                        <input type="text" value={apellido} onChange={(e) => setApellido(e.target.value)} />
+                        <label><FontAwesomeIcon icon={faUser} className="input-icon" /> Apellido</label>
+                        <input 
+                            type="text" 
+                            value={apellido} 
+                            onChange={(e) => setApellido(e.target.value)} 
+                            placeholder="Tu apellido"
+                        />
                     </div>
                     
                     <div className="input-group">
-                        <label>Correo electrónico</label>
-                        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                        <label><FontAwesomeIcon icon={faEnvelope} className="input-icon" /> Correo electrónico</label>
+                        <input 
+                            type="email" 
+                            value={email} 
+                            onChange={(e) => setEmail(e.target.value)} 
+                            placeholder="correo@ejemplo.com"
+                        />
                     </div>
                     
                     <div className="input-group">
-                        <label>Teléfono</label>
-                        <input type="text" value={telefono} onChange={(e) => setTelefono(e.target.value)} />
+                        <label><FontAwesomeIcon icon={faPhone} className="input-icon" /> Teléfono</label>
+                        <input 
+                            type="text" 
+                            value={telefono} 
+                            onChange={(e) => setTelefono(e.target.value)} 
+                            placeholder="(+57) 300 123 4567"
+                        />
                     </div>
                     
                     <div className="input-group">
-                        <label>Contraseña</label>
-                        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                        <label><FontAwesomeIcon icon={faLock} className="input-icon" /> Contraseña</label>
+                        <input 
+                            type="password" 
+                            value={password} 
+                            onChange={(e) => setPassword(e.target.value)} 
+                            placeholder="••••••••"
+                        />
                     </div>
                     
                     <div className="input-group">
-                        <label>Confirmar contraseña</label>
-                        <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+                        <label><FontAwesomeIcon icon={faLock} className="input-icon" /> Confirmar contraseña</label>
+                        <input 
+                            type="password" 
+                            value={confirmPassword} 
+                            onChange={(e) => setConfirmPassword(e.target.value)} 
+                            placeholder="••••••••"
+                        />
                     </div>
                 </div>
                 
+                <div className="role-selector-header">
+                    <h3>Selecciona tu tipo de cuenta</h3>
+                </div>
+
                 <div className="role-selector">
                     <div 
                         className={`role-card ${userType === 'usuario' ? 'selected' : ''}`}
                         onClick={() => setUserType('usuario')}
                     >
+                        <div className="role-icon">
+                            <FontAwesomeIcon icon={faUser} />
+                        </div>
                         <h3>Usuario</h3>
                         <p>Busco alojamiento cerca de mi universidad</p>
+                        {userType === 'usuario' && <div className="selected-badge">✓ Seleccionado</div>}
                     </div>
                     
                     <div 
                         className={`role-card ${userType === 'arrendador' ? 'selected' : ''}`}
                         onClick={() => setUserType('arrendador')}
                     >
+                        <div className="role-icon">
+                            <FontAwesomeIcon icon={faUserTie} />
+                        </div>
                         <h3>Arrendador</h3>
                         <p>Ofrezco alojamiento para estudiantes</p>
+                        {userType === 'arrendador' && <div className="selected-badge">✓ Seleccionado</div>}
                     </div>
                 </div>
                 
-                {error && <p className="error-message">{mensaje}</p>}
+                {error && (
+                    <div className="error-message">
+                        <span className="error-icon">⚠</span>
+                        {mensaje}
+                    </div>
+                )}
                 
-                <button className="in-button" onClick={handleSubmit}>Registrarse ahora</button>
+                <button className="in-button" onClick={handleSubmit}>
+                    <span>Registrarse ahora</span>
+                    <span className="arrow">→</span>
+                </button>
+
+                <div className="register-link">
+                    ¿Ya tienes cuenta? <span onClick={() => navigate('/login')}>Inicia sesión aquí</span>
+                </div>
                 
                 <div>
                     {showSucess && <SucessModal message={'Registro Exitoso.'} goToLogin={handleSuccessClose} />}
