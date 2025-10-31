@@ -1,17 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faFileInvoiceDollar, faStar, faHistory, faTrashAlt, faChartBar } from "@fortawesome/free-solid-svg-icons";
+import { faUser, faFileInvoiceDollar, faStar, faHistory, faTrashAlt, faChartBar, faComments } from "@fortawesome/free-solid-svg-icons";
 import User from '../components/My-Account/User';
 import Billing from '../components/My-Account/Billing';
 import Stats from '../components/My-Account/Record';
 import Reviews from '../components/My-Account/Reviews';
 import Reservations from '../components/My-Account/Reservations';
 import History from '../components/My-Account/History';
+import Messages from '../components/My-Account/Messages';
+import { UserContext } from "../contexts/UserContext";
 
 // Nota: Este archivo usa Tailwind CSS classes para un diseño más moderno y responsivo.
 
 function MyAccount() {
     const [activeTab, setActiveTab] = useState("datos");
+    const { user } = useContext(UserContext);
 
     // Función para renderizar dinámicamente el componente según el tab seleccionado
     const renderComponent = () => {
@@ -26,6 +29,8 @@ function MyAccount() {
                 return <Reviews />
             case "reservas":
                 return <Reservations />
+            case "mensajes":
+                return <Messages />
             case "historial":
                 return <History />
             case "eliminar":
@@ -41,6 +46,7 @@ function MyAccount() {
         { key: 'estadisticas', label: 'Estadísticas', icon: faChartBar },
         { key: 'reseñas', label: 'Reseñas', icon: faStar },
         { key: 'reservas', label: 'Reservas', icon: faHistory },
+        ...(user && user.rol === 2 ? [{ key: 'mensajes', label: 'Mensajes', icon: faComments }] : []),
         { key: 'historial', label: 'Historial', icon: faHistory },
         { key: 'eliminar', label: 'Eliminar cuenta', icon: faTrashAlt, danger: true }
     ];
@@ -70,8 +76,6 @@ function MyAccount() {
                             ))}
                         </ul>
                     </nav>
-
-
                 </aside>
 
                 {/* Content area */}
