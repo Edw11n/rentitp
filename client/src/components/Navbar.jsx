@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faClipboardList } from '@fortawesome/free-solid-svg-icons';
 import { UserContext } from '../contexts/UserContext';
 import { useNavigate } from 'react-router-dom';
 
@@ -39,6 +39,18 @@ return (
         </div>
     ) : (
         <div className="flex items-center gap-4">
+        {/* Botón Panel de Gestión - Solo para arrendadores (rol === 2) */}
+        {user.rol === 2 && (
+            <button
+            onClick={() => navigate('/dashboard')}
+            className="text-white font-medium cursor-pointer px-4 py-2 rounded-lg bg-white/10 flex items-center gap-2 transition hover:bg-white/20 hover:-translate-y-1"
+            title="Panel de Gestión"
+            >
+            <FontAwesomeIcon icon={faClipboardList} />
+            <span className="hidden sm:inline">Panel de Gestión</span>
+            </button>
+        )}
+        
         <FontAwesomeIcon
             icon={faUser}
             className="text-white text-xl cursor-pointer p-2 rounded-full bg-white/10 transition hover:bg-white/20 hover:scale-105"
