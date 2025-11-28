@@ -70,48 +70,57 @@ const handleSelectLocation = ({ lat, lng }) => {
 };
 
 return (
-    <div className="max-w-3xl mx-auto p-6 bg-white rounded-xl shadow-lg space-y-6">
-    <h2 className="text-2xl font-bold text-gray-800">Añadir Apartamento</h2>
-    {message && <p className="text-red-600 font-medium">{message}</p>}
+    <div className="space-y-6">
+    {message && (
+        <div className={`p-4 rounded-lg ${message.includes('éxito') || message.includes('Apartamento') ? 'bg-green-50 border border-green-200 text-green-800' : 'bg-red-50 border border-red-200 text-red-800'}`}>
+        <p className="font-medium">{message}</p>
+        </div>
+    )}
 
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Barrio</label>
         <input
-        type="text"
-        placeholder="Barrio"
-        value={barrio}
-        onChange={(e) => setBarrio(e.target.value)}
-        className="border rounded p-2 w-full focus:ring-2 focus:ring-blue-400"
+            type="text"
+            placeholder="Ej: El Poblado"
+            value={barrio}
+            onChange={(e) => setBarrio(e.target.value)}
+            className="border border-gray-300 rounded-lg p-3 w-full focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
         />
+        </div>
+        <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Dirección</label>
         <input
-        type="text"
-        placeholder="Dirección"
-        value={direccion}
-        onChange={(e) => setDireccion(e.target.value)}
-        className="border rounded p-2 w-full focus:ring-2 focus:ring-blue-400"
+            type="text"
+            placeholder="Ej: Calle 10 #15-20"
+            value={direccion}
+            onChange={(e) => setDireccion(e.target.value)}
+            className="border border-gray-300 rounded-lg p-3 w-full focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
         />
+        </div>
     </div>
 
-    <div>
-        <label className="block font-semibold mb-2">Coordenadas</label>
-        <div className="flex gap-2 items-center">
+    <div className="bg-gradient-to-br from-indigo-50 to-purple-50 p-5 rounded-xl border border-indigo-100">
+        <label className="block text-sm font-medium text-gray-700 mb-3">Coordenadas</label>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <input
             type="text"
             placeholder="Latitud"
             value={latitud}
             readOnly
-            className="border rounded p-2 w-1/3 focus:ring-2 focus:ring-blue-400"
+            className="border border-gray-300 rounded-lg p-3 bg-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
         />
         <input
             type="text"
             placeholder="Longitud"
             value={longitud}
             readOnly
-            className="border rounded p-2 w-1/3 focus:ring-2 focus:ring-blue-400"
+            className="border border-gray-300 rounded-lg p-3 bg-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
         />
         <button
             type="button"
             onClick={() => setShowMap(true)}
-            className="flex items-center gap-1 px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+            className="flex items-center justify-center gap-2 px-4 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-200 shadow-md hover:shadow-lg font-medium"
         >
             <FontAwesomeIcon icon={faMapMarkerAlt} /> Seleccionar en mapa
         </button>
@@ -119,47 +128,60 @@ return (
     </div>
 
     <div>
-        <label className="block font-semibold mb-2">Información adicional</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Información adicional</label>
         <textarea
-        placeholder="Información adicional de la publicación"
+        placeholder="Describe las características principales del apartamento (ej: número de habitaciones, baños, amenidades, etc.)"
         value={addInfo}
         onChange={handleAddInfoChange}
         maxLength="500"
         rows="5"
-        className="border rounded p-2 w-full focus:ring-2 focus:ring-blue-400"
+        className="border border-gray-300 rounded-lg p-3 w-full focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition resize-none"
         />
-        <span className="text-sm text-gray-500">{charCount}/500</span>
+        <div className="flex justify-between items-center mt-1">
+        <span className="text-sm text-gray-500">{charCount}/500 caracteres</span>
+        </div>
     </div>
 
-    <div>
-        <label className="block font-semibold mb-2">Imágenes del Apartamento</label>
+    <div className="bg-gray-50 p-5 rounded-xl border-2 border-dashed border-gray-300">
+        <label className="block text-sm font-medium text-gray-700 mb-3">Imágenes del Apartamento</label>
         <input
         type="file"
         accept="image/*"
         multiple
         onChange={handleFileChange}
-        className="border rounded p-2 w-full"
+        className="block w-full text-sm text-gray-500 file:mr-4 file:py-3 file:px-6 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer transition"
         />
         {imageFiles.length > 0 && (
-        <div className="mt-2 flex flex-wrap gap-2">
+        <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
             {imageFiles.map((file, idx) => (
-            <div key={idx} className="bg-gray-100 p-2 rounded flex items-center gap-2">
-                <span className="text-sm font-medium">Imagen {idx + 1}</span>
-                <button onClick={() => handleViewImage(file)} className="text-blue-600 hover:text-blue-800">
-                <FontAwesomeIcon icon={faEye} />
+            <div key={idx} className="bg-white p-3 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition">
+                <p className="text-sm font-medium text-gray-700 mb-2">Imagen {idx + 1}</p>
+                <div className="flex gap-2">
+                <button 
+                    onClick={() => handleViewImage(file)} 
+                    className="flex-1 py-2 px-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition text-sm font-medium"
+                >
+                    <FontAwesomeIcon icon={faEye} />
                 </button>
-                <button onClick={() => removeImage(idx)} className="text-red-600 hover:text-red-800">
-                <FontAwesomeIcon icon={faTrashAlt} />
+                <button 
+                    onClick={() => removeImage(idx)} 
+                    className="flex-1 py-2 px-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition text-sm font-medium"
+                >
+                    <FontAwesomeIcon icon={faTrashAlt} />
                 </button>
+                </div>
             </div>
             ))}
         </div>
+        )}
+        {imageFiles.length === 0 && (
+        <p className="text-sm text-gray-500 mt-2 text-center">No hay imágenes seleccionadas</p>
         )}
     </div>
 
     <button
         onClick={handleSubmit}
-        className="w-full px-4 py-2 bg-green-600 text-white font-semibold rounded hover:bg-green-700 transition flex items-center justify-center gap-2"
+        className="w-full px-6 py-4 bg-gradient-to-r from-green-600 to-green-700 text-white font-semibold rounded-xl hover:from-green-700 hover:to-green-800 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-3 text-lg"
     >
         <FontAwesomeIcon icon={faSave} /> Publicar Apartamento
     </button>
