@@ -39,6 +39,11 @@ function ApartmentList() {
     }
   };
 
+  const showRouteToITP = (lat, lng) => {
+    localStorage.setItem("showRoute", JSON.stringify({ lat, lng }));
+    window.dispatchEvent(new Event("storage"));
+  };
+
   const openImageModal = (images) => {
     if (!images || images.length === 0) return;
     setModalImages(images.split ? images.split(",") : images);
@@ -138,12 +143,27 @@ function ApartmentList() {
                   <p>Teléfono: {apartment.user_phonenumber}</p>
                 </div>
 
-                <button
-                  className="mt-2 px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition-all"
-                  onClick={() => openChat(apartment.user_id)}
-                >
-                  💬 Chatear con el arrendador
-                </button>
+                <div className="flex gap-2 mt-3">
+                  <button
+                    className="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all flex items-center justify-center gap-2"
+                    onClick={() => showRouteToITP(apartment.latitud_apt, apartment.longitud_apt)}
+                  >
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                    </svg>
+                    Ver Ruta al ITP
+                  </button>
+                  
+                  <button
+                    className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all flex items-center justify-center gap-2"
+                    onClick={() => openChat(apartment.user_id)}
+                  >
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                    Chatear
+                  </button>
+                </div>
               </div>
             )}
           </div>
