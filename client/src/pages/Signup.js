@@ -98,7 +98,7 @@ function Signup() {
                         <FontAwesomeIcon icon={faHome} className="home-icon" />
                     </div>
                     <h1>Únete a nuestra comunidad</h1>
-                    <p>Encuentra o ofrece el alojamiento perfecto cerca de tu universidad</p>
+                    <p>Encuentra o ofrece el alojamiento perfecto cerca de tu UniPutumayo</p>
                     <div className="features-list">
                         <div className="feature-item">
                             <span className="check-icon">✓</span>
@@ -106,7 +106,7 @@ function Signup() {
                         </div>
                         <div className="feature-item">
                             <span className="check-icon">✓</span>
-                            <span>Conecta con propietarios directamente</span>
+                            <span>Conecta con propietarios</span>
                         </div>
                         <div className="feature-item">
                             <span className="check-icon">✓</span>
@@ -119,7 +119,7 @@ function Signup() {
             <div className="div-container">
                 <div className="title">
                     <h2>Crea tu cuenta</h2>
-                    <p className="subtitle">Únete a miles de estudiantes y propietarios</p>
+                    <p className="subtitle">Únete a nuestra comunidad de estudiantes y propietarios</p>
                 </div>
 
                 <div className="google-login-container">
