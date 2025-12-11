@@ -24,8 +24,8 @@ exports.generatePDF = async (req, res) => {
         res.setHeader('Content-Disposition', `attachment; filename=apartamento_${id}.pdf`);
         res.setHeader('Content-Security-Policy', "default-src 'self'");
 
-        // Generar PDF
-        const doc = new PDFDocument({ margin: 50 });
+        // Generar PDF con márgenes optimizados
+        const doc = new PDFDocument({ margin: 40, size: 'A4' });
         
         // Eventos de error
         doc.on('error', (error) => {
@@ -38,29 +38,140 @@ exports.generatePDF = async (req, res) => {
         // Pipe al response
         doc.pipe(res);
 
-        // Contenido
-        doc.fontSize(20)
+        // ============ ENCABEZADO ============
+        // Fondo del encabezado (color profesional azul)
+        doc.rect(0, 0, doc.page.width, 100)
+           .fillAndStroke('#1e40af', '#1e40af');
+
+        // Logo/Nombre de la empresa
+        doc.fontSize(32)
            .font('Helvetica-Bold')
-           .text(`Apartamento: ${apartment.direccion_apt}`, { align: 'center' })
-           .moveDown(0.5);
-
-        doc.fontSize(14)
+           .fillColor('#ffffff')
+           .text('RentUp', 50, 25, { align: 'left' })
+           .fontSize(11)
            .font('Helvetica')
-           .text(`Barrio: ${apartment.barrio}`)
-           .text(`Ubicación: ${apartment.latitud_apt}, ${apartment.longitud_apt}`)
-           .text(`Información adicional: ${apartment.info_add_apt || 'N/A'}`)
-           .moveDown();
+           .text('Tu plataforma de confianza para encontrar apartamentos', 50, 62, { align: 'left', width: 300 });
 
-        doc.fontSize(16)
+        // Fecha y número de documento
+        doc.fontSize(10)
+           .font('Helvetica')
+           .fillColor('#ffffff')
+           .text(`Documento generado: ${new Date().toLocaleDateString('es-ES')}`, 50, 25, { align: 'right' })
+           .text(`Ref: APT-${id}`, 50, 40, { align: 'right' });
+
+        // Espacio después del encabezado
+        doc.moveDown(2.5);
+
+        // ============ TÍTULO PRINCIPAL ============
+        doc.fillColor('#1e40af')
+           .fontSize(18)
            .font('Helvetica-Bold')
-           .text('Información del arrendador:', { underline: true })
-           .moveDown(0.5);
+           .text('DETALLES DEL APARTAMENTO', { underline: true })
+           .moveDown(0.3);
 
-        doc.fontSize(14)
-           .font('Helvetica')
-           .text(`Nombre: ${apartment.user_name} ${apartment.user_lastname}`)
-           .text(`Email: ${apartment.user_email}`)
-           .text(`Teléfono: ${apartment.user_phonenumber}`);
+        // ============ SECCIÓN DE INFORMACIÓN DEL APARTAMENTO ============
+        doc.fontSize(12)
+           .fillColor('#000000')
+           .font('Helvetica-Bold')
+           .text('Ubicación y Detalles');
+
+        doc.moveDown(0.2);
+
+        // Crear tabla de información del apartamento
+        const apartmentTableTop = doc.y;
+        const apartmentTableLeft = 50;
+        const apartmentTableWidth = doc.page.width - 100;
+
+        // Encabezado de tabla
+        drawTableRow(doc, apartmentTableLeft, doc.y, apartmentTableWidth, 
+                     ['Campo', 'Valor'], 
+                     ['#e5e7eb', '#e5e7eb'],
+                     ['#1e40af', '#1e40af'], 
+                     true);
+
+        // Filas de datos
+        const apartmentData = [
+            ['Dirección', apartment.direccion_apt],
+            ['Barrio', apartment.barrio],
+            ['Latitud', apartment.latitud_apt],
+            ['Longitud', apartment.longitud_apt],
+            ['Información Adicional', apartment.info_add_apt || 'N/A']
+        ];
+
+        let alternateColor = true;
+        apartmentData.forEach((row) => {
+            const bgColor = alternateColor ? '#f9fafb' : '#ffffff';
+            drawTableRow(doc, apartmentTableLeft, doc.y, apartmentTableWidth, 
+                         row, 
+                         [bgColor, bgColor],
+                         ['#374151', '#374151'],
+                         false);
+            alternateColor = !alternateColor;
+        });
+
+        // Línea separadora
+        doc.strokeColor('#d1d5db')
+           .moveTo(apartmentTableLeft, doc.y)
+           .lineTo(apartmentTableLeft + apartmentTableWidth, doc.y)
+           .stroke();
+
+        doc.moveDown(0.8);
+
+        // ============ SECCIÓN DE INFORMACIÓN DEL ARRENDADOR ============
+        doc.fillColor('#1e40af')
+           .fontSize(18)
+           .font('Helvetica-Bold')
+           .text('INFORMACIÓN DEL ARRENDADOR', { underline: true })
+           .moveDown(0.3);
+
+        doc.fontSize(12)
+           .fillColor('#000000')
+           .font('Helvetica-Bold')
+           .text('Datos de Contacto');
+
+        doc.moveDown(0.2);
+
+        // Crear tabla de información del arrendador
+        const landlordTableLeft = 50;
+        const landlordTableWidth = doc.page.width - 100;
+
+        // Encabezado de tabla
+        drawTableRow(doc, landlordTableLeft, doc.y, landlordTableWidth, 
+                     ['Concepto', 'Detalle'], 
+                     ['#10b981', '#10b981'],
+                     ['#ffffff', '#ffffff'], 
+                     true);
+
+        // Filas de datos
+        const landlordData = [
+            ['Nombre Completo', `${apartment.user_name} ${apartment.user_lastname}`],
+            ['Correo Electrónico', apartment.user_email],
+            ['Teléfono', apartment.user_phonenumber || 'No disponible']
+        ];
+
+        alternateColor = true;
+        landlordData.forEach((row) => {
+            const bgColor = alternateColor ? '#f0fdf4' : '#ffffff';
+            drawTableRow(doc, landlordTableLeft, doc.y, landlordTableWidth, 
+                         row, 
+                         [bgColor, bgColor],
+                         ['#374151', '#374151'],
+                         false);
+            alternateColor = !alternateColor;
+        });
+
+        // Línea separadora final
+        doc.strokeColor('#d1d5db')
+           .moveTo(landlordTableLeft, doc.y)
+           .lineTo(landlordTableLeft + landlordTableWidth, doc.y)
+           .stroke();
+
+        // ============ PIE DE PÁGINA ============
+        doc.moveDown(1.5);
+        doc.fontSize(9)
+           .fillColor('#6b7280')
+           .text('Este documento fue generado automáticamente por RentUp.', { align: 'center' })
+           .text('Para más información, visita nuestra plataforma.', { align: 'center' });
 
         // Finalizar
         doc.end();
@@ -73,6 +184,43 @@ exports.generatePDF = async (req, res) => {
         });
     }
 };
+
+// Función auxiliar para dibujar filas de tabla
+function drawTableRow(doc, x, y, width, data, bgColors, textColors, isBold) {
+    const colWidth = width / data.length;
+    const rowHeight = 35;
+
+    // Fondo de la fila
+    bgColors.forEach((color, i) => {
+        doc.rect(x + (i * colWidth), y, colWidth, rowHeight)
+           .fillAndStroke(color, '#d1d5db');
+    });
+
+    // Texto de la fila
+    data.forEach((text, i) => {
+        const cellX = x + (i * colWidth) + 10;
+        const cellY = y + 10;
+
+        if (isBold) {
+            doc.font('Helvetica-Bold');
+        } else {
+            doc.font('Helvetica');
+        }
+
+        doc.fontSize(10)
+           .fillColor(textColors[i])
+           .text(text, cellX, cellY, {
+               width: colWidth - 20,
+               height: rowHeight - 20,
+               align: 'left',
+               valign: 'center'
+           });
+    });
+
+    // Mover la posición del documento después de la fila
+    doc.y = y + rowHeight;
+    doc.moveDown(0.3);
+}
 
 // Genera un Excel con la información del apartamento y del arrendador
 exports.generateExcel = async (req, res) => {
