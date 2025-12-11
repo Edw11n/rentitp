@@ -37,11 +37,30 @@ async function importDatabase() {
     console.log('🔌 Conectando a MySQL...');
     conn = await mysql.createConnection(connectionConfig);
 
-    // 4. Configurar el entorno MySQL
+    // 4. Verificar si la base de datos ya existe
+    const [databases] = await conn.query('SHOW DATABASES LIKE "rentitpdb"');
+    
+    if (databases.length > 0) {
+      console.log('✅ La base de datos "rentitpdb" ya existe.');
+      
+      // Verificar si tiene tablas
+      await conn.query('USE rentitpdb');
+      const [tables] = await conn.query('SHOW TABLES');
+      
+      if (tables.length > 0) {
+        console.log(`✅ Se encontraron ${tables.length} tablas existentes. Saltando importación.`);
+        return;
+      }
+    }
+    
+    // 5. Si no existe o está vacía, crear e importar
+    console.log('📄 Base de datos no existe o está vacía. Creando...');
+    
+    // Configurar el entorno MySQL
     await conn.query('SET FOREIGN_KEY_CHECKS=0');
     await conn.query('SET SQL_MODE=""');
     
-    // 5. Crear y usar la base de datos
+    // Crear y usar la base de datos
     await conn.query('CREATE DATABASE IF NOT EXISTS rentitpdb');
     await conn.query('USE rentitpdb');
     
