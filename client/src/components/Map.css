@@ -1,0 +1,55 @@
+/* Estilos personalizados para el popup del mapa */
+.custom-popup .leaflet-popup-content-wrapper {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.16);
+  border: none;
+  padding: 0 !important;
+  overflow: hidden;
+}
+
+.custom-popup .leaflet-popup-content {
+  margin: 0;
+  padding: 0;
+  width: 100% !important;
+}
+
+.custom-popup .leaflet-popup-tip {
+  background: #ffffff;
+  box-shadow: none;
+  border: none;
+}
+
+.custom-popup .leaflet-popup {
+  margin-bottom: 0;
+}
+
+/* Animación de entrada del popup */
+.leaflet-popup {
+  animation: popupFadeIn 0.3s ease-out;
+}
+
+@keyframes popupFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Mejorar la apariencia de los botones dentro del popup */
+.custom-popup button:focus {
+  outline: none;
+  ring: 2px;
+  ring-color: rgba(99, 102, 241, 0.5);
+}
+
+/* Responsive para pantallas pequeñas */
+@media (max-width: 640px) {
+  .custom-popup .leaflet-popup-content-wrapper {
+    width: 280px !important;
+  }
+}

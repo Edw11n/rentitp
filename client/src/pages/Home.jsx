@@ -5,13 +5,8 @@ import { FaSearch, FaMapMarkerAlt, FaHome, FaFilter } from "react-icons/fa";
 import { HiViewList, HiMap } from "react-icons/hi";
 
 function Home() {
-  const [view, setView] = useState("list"); // "both", "map", "list"
+  const [view, setView] = useState("both"); // "both", "map", "list"
   const [searchTerm, setSearchTerm] = useState("");
-  const [mapActive, setMapActive] = useState(false);
-
-  const handleMapActivation = () => {
-    setMapActive(true);
-  };
 
   return (
     <div className="h-[calc(100vh-82px)] bg-gradient-to-br from-gray-50 to-indigo-50 flex flex-col">
@@ -23,7 +18,6 @@ function Home() {
               <button
                 onClick={() => {
                   setView("both");
-                  setMapActive(false);
                 }}
                 className={`px-4 py-2 rounded-lg transition-all flex items-center gap-2 ${
                   view === "both"
@@ -37,7 +31,6 @@ function Home() {
               <button
                 onClick={() => {
                   setView("map");
-                  setMapActive(false);
                 }}
                 className={`px-4 py-2 rounded-lg transition-all flex items-center gap-2 ${
                   view === "map"
@@ -66,46 +59,16 @@ function Home() {
 
       {/* Contenido principal */}
       <div className="flex flex-1 overflow-hidden relative">
-        {/* Overlay para desactivar el mapa cuando se hace clic fuera */}
-        {mapActive && (
-          <div
-            className="absolute inset-0 z-10"
-            onClick={() => setMapActive(false)}
-          />
-        )}
-
         {/* Mapa */}
         {(view === "both" || view === "map") && (
           <div
             className={`${
               view === "both" ? "w-[400px]" : "flex-1"
-            } h-full relative transition-all duration-300 ${mapActive ? 'z-20' : 'z-10'}`}
+            } h-full relative transition-all duration-300 z-10`}
           >
-            {/* Mapa con efecto blur */}
-            <div className={`h-full transition-all duration-300 ${!mapActive ? 'blur-sm' : ''}`}>
+            <div className="h-full w-full">
               <Map />
             </div>
-
-            {/* Overlay para activar el mapa */}
-            {!mapActive && (
-              <div
-                className="absolute inset-0 bg-white/10 backdrop-blur-[2px] flex items-center justify-center cursor-pointer hover:bg-white/20 transition-all"
-                onClick={handleMapActivation}
-              >
-                <div className="bg-white/95 backdrop-blur-sm px-6 py-4 rounded-2xl shadow-2xl flex flex-col items-center gap-3 transform hover:scale-105 transition-transform">
-                  <HiMap className="text-indigo-600 text-4xl" />
-                  <p className="text-lg font-semibold text-gray-800">Activar mapa</p>
-                  <p className="text-sm text-gray-500">Haz clic para interactuar</p>
-                </div>
-              </div>
-            )}
-
-            {view === "both" && mapActive && (
-              <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-sm px-4 py-2 rounded-xl shadow-lg flex items-center gap-2">
-                <FaMapMarkerAlt className="text-indigo-600" />
-                <span className="text-sm font-medium text-gray-700">Vista de mapa</span>
-              </div>
-            )}
           </div>
         )}
 

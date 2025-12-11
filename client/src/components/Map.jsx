@@ -5,6 +5,9 @@ import L from 'leaflet';
 import mapController from '../apis/mapController';
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
 
+// Estilos personalizados para el popup
+import './Map.css';
+
 // Actualiza la vista del mapa cuando cambian las coordenadas
 function UpdateMapCenter({ center }) {
 const map = useMap();
@@ -17,12 +20,42 @@ return null;
 // Componente para invalidar el tamaño del mapa cuando cambia el contenedor
 function InvalidateSize() {
 const map = useMap();
+
 useEffect(() => {
-    const timer = setTimeout(() => {
-      map.invalidateSize();
-    }, 100);
-    return () => clearTimeout(timer);
+    // Llamadas iniciales de invalidateSize
+    const initialTimers = [
+      setTimeout(() => map.invalidateSize(), 0),
+      setTimeout(() => map.invalidateSize(), 50),
+      setTimeout(() => map.invalidateSize(), 100),
+      setTimeout(() => map.invalidateSize(), 200),
+    ];
+
+    return () => initialTimers.forEach(timer => clearTimeout(timer));
 }, [map]);
+
+// Usar ResizeObserver para detectar cambios de tamaño del contenedor
+useEffect(() => {
+    const container = map.getContainer();
+    if (!container) return;
+
+    const resizeObserver = new ResizeObserver(() => {
+      map.invalidateSize();
+    });
+
+    resizeObserver.observe(container);
+    return () => resizeObserver.disconnect();
+}, [map]);
+
+// También escuchar eventos de ventana
+useEffect(() => {
+    const handleResize = () => {
+      map.invalidateSize();
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+}, [map]);
+
 return null;
 
 }
@@ -143,23 +176,59 @@ return (
         position={[apt.latitud_apartamento, apt.longitud_apartamento]}
         icon={DefaultIcon}
         >
-        <Popup className="!z-50">
-            <b>Dirección: {apt.direccion_apartamento}</b>
-            <p><strong>Barrio:</strong> {apt.barrio_apartamento}</p>
-            <p><b>Información adicional:</b><br />{apt.info_adicional_apartamento}</p>
-            {selectedApartment?.id_apartamento === apt.id_apartamento && distance && (
-            <div className="mt-2 p-2 bg-blue-50 rounded border border-blue-200">
-                <p className="text-sm font-semibold text-blue-800">📍 Distancia desde el ITP:</p>
-                <p className="text-sm text-blue-700">🚗 {distance.km} km</p>
-                <p className="text-sm text-blue-700">⏱️ {distance.min} minutos aprox.</p>
+        <Popup className="!z-50 custom-popup">
+            <div className="w-80 p-0">
+              {/* Header */}
+              <div style={{background: 'linear-gradient(135deg, #6A6BEF 0%, #7B7CF0 100%)'}} className="text-white p-4 rounded-t-lg">
+                <h3 className="font-bold text-lg mb-1">📍 {apt.barrio_apartamento}</h3>
+                <p className="text-sm opacity-90">{apt.direccion_apartamento}</p>
+              </div>
+              
+              {/* Contenido */}
+              <div className="p-4 bg-white">
+                <div className="mb-4">
+                  <p className="text-sm text-gray-600 mb-2">
+                    <span className="font-semibold text-gray-800">Información adicional:</span>
+                  </p>
+                  <p className="text-sm text-gray-700 bg-gray-50 p-3 rounded">
+                    {apt.info_adicional_apartamento}
+                  </p>
+                </div>
+
+                {selectedApartment?.id_apartamento === apt.id_apartamento && distance && (
+                  <div className="mb-4 bg-blue-50 border-l-4 border-blue-500 p-3 rounded">
+                    <p className="text-sm font-bold text-blue-900 mb-2">📍 Distancia desde el ITP:</p>
+                    <div className="flex gap-4 text-sm">
+                      <div className="flex items-center gap-2">
+                        <span className="text-lg">🚗</span>
+                        <div>
+                          <p className="text-gray-600">Distancia</p>
+                          <p className="font-bold text-blue-700">{distance.km} km</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-lg">⏱️</span>
+                        <div>
+                          <p className="text-gray-600">Tiempo</p>
+                          <p className="font-bold text-blue-700">{distance.min} min</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Botón */}
+                <button 
+                  onClick={() => handleApartmentClick(apt)}
+                  style={{
+                    backgroundColor: selectedApartment?.id_apartamento === apt.id_apartamento ? '#E53E3E' : '#6A6BEF',
+                  }}
+                  className={`w-full px-4 py-2 rounded-lg font-semibold transition-all duration-200 text-white hover:opacity-90`}
+                >
+                  {selectedApartment?.id_apartamento === apt.id_apartamento ? '❌ Ocultar ruta' : '🗺️ Ver ruta desde ITP'}
+                </button>
+              </div>
             </div>
-            )}
-            <button 
-            onClick={() => handleApartmentClick(apt)}
-            className="mt-2 px-2 py-1 bg-indigo-500 text-white rounded hover:bg-indigo-600 transition"
-            >
-            {selectedApartment?.id_apartamento === apt.id_apartamento ? 'Ocultar ruta' : 'Ver ruta desde ITP'}
-            </button>
         </Popup>
         </Marker>
     ))}
