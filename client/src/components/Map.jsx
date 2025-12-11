@@ -14,6 +14,18 @@ map.setView(center, 17);
 return null;
 }
 
+// Componente para invalidar el tamaño del mapa cuando cambia el contenedor
+function InvalidateSize() {
+const map = useMap();
+useEffect(() => {
+    const timer = setTimeout(() => {
+      map.invalidateSize();
+    }, 100);
+    return () => clearTimeout(timer);
+}, [map]);
+return null;
+}
+
 function Map() {
 const [apartments, setApartments] = useState([]);
 const [center, setCenter] = useState([1.157037, -76.651443]);
@@ -65,6 +77,7 @@ return (
     maxZoom={18}
     >
     <UpdateMapCenter center={center} />
+    <InvalidateSize />
     <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> contributors'
