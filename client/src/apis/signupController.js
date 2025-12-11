@@ -3,6 +3,7 @@ const API_URL = process.env.REACT_APP_API_URL;
 
 export const signupUser = async (userData) => {
     try {
+        console.log('Datos enviados al backend:', userData);
         await Axios.post(`${API_URL}/users/signup`, userData);
         return { success: true };
     } catch (error) {

@@ -4,7 +4,7 @@ import ApartmentFormController from '../apis/apartmentformController';
 import { FaTrash, FaEye, FaSave, FaMapMarkerAlt, FaHome, FaMapPin, FaInfoCircle, FaImages, FaPlus } from 'react-icons/fa';
 import MapModal from './MapModal';
 
-function ApartmentForm() {
+function ApartmentForm({ onApartmentAdded }) {
 const { user } = useContext(UserContext);
 
 const [barrio, setBarrio] = useState('');
@@ -52,6 +52,7 @@ const handleSubmit = async () => {
     setAddInfo('');
     setCharCount(0);
     setImageFiles([]);
+    if (onApartmentAdded) onApartmentAdded();
     } catch (error) {
     setMessage(error.message);
     }

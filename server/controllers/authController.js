@@ -6,7 +6,7 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const googleLogin = async (req, res) => {
     try {
-        const { token } = req.body;
+        const { token, rolId = 1 } = req.body; // Recibir rolId desde el frontend, por defecto 1
         if (!token) {
             return res.status(400).json({ success: false, message: "Token no proporcionado" });
         }
@@ -19,7 +19,6 @@ const googleLogin = async (req, res) => {
 
         const payload = ticket.getPayload();
         const { email, given_name, family_name, sub } = payload; // sub es el ID único del usuario en Google
-        const rolId = 1; // Asignar rol por defecto
 
         // Buscar usuario en la base de datos
         let [user] = await db.query(`
