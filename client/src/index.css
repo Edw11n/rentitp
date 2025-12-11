@@ -52,6 +52,17 @@
     75% { transform: translateX(10px); }
   }
 
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
   .animate-fadeIn {
     animation: fadeIn 0.2s ease-out;
   }
@@ -85,5 +96,6 @@
 
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background: linear-gradient(180deg, #2563eb, #1d4ed8);
+
   }
 }

@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useManageController from "../apis/manageController";
 import { FaTrash, FaEye, FaFilePdf, FaFileExcel, FaEdit, FaHome, FaSync, FaSave, FaTimes, FaPlus, FaMapMarkerAlt, FaInfoCircle } from 'react-icons/fa';
+import MapModal from './MapModal';
+import Toast from './Toast';
+
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -19,9 +22,12 @@ const {
     handleDelete,
     handleUpdate,
     handleCancelEdit,
+    toast,
+    closeToast,
 } = useManageController(navigate);
 
 const [newImageFiles, setNewImageFiles] = useState([]);
+const [showMap, setShowMap] = useState(false);
 
 const handleNewImageChange = (e) => {
     if (e.target.files) {
@@ -52,6 +58,16 @@ const handleViewNewImage = (file) => {
 
 const handleRemoveNewImage = (index) => {
     setNewImageFiles(prev => prev.filter((_, i) => i !== index));
+};
+
+const handleSelectLocation = ({ lat, lng }) => {
+    // Actualizar el formulario de edición con las nuevas coordenadas
+    const updatedFormData = {
+        ...editFormData,
+        latitud_apt: lat.toString(),
+        longitud_apt: lng.toString()
+    };
+    setEditFormData(updatedFormData);
 };
 
 const downloadDocument = (id, type) => {
@@ -187,6 +203,7 @@ return (
                             </button>
                             </div>
                         </div>
+
                         ))}
                     </div>
                     )}
@@ -269,6 +286,29 @@ return (
             </div>
         ))}
         </div>
+    )}
+    
+    {/* Toast de notificación */}
+    {toast && (
+        <Toast 
+        message={toast.message} 
+        type={toast.type} 
+        onClose={closeToast}
+        duration={2000}
+        />
+    )}
+    
+    {/* Modal de mapa */}
+    {showMap && (
+        <MapModal
+        onClose={() => setShowMap(false)}
+        onSelectLocation={handleSelectLocation}
+        initialCoords={
+            editFormData.latitud_apt && editFormData.longitud_apt 
+            ? { lat: parseFloat(editFormData.latitud_apt), lng: parseFloat(editFormData.longitud_apt) } 
+            : null
+        }
+        />
     )}
     </div>
     </div>

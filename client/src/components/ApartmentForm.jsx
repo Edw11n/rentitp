@@ -189,6 +189,7 @@ return (
         <div>
         <h2 className="text-3xl font-bold text-gray-800">Añadir Apartamento</h2>
         <p className="text-sm text-gray-600">Complete la información para publicar su propiedad</p>
+
         </div>
     </div>
     {message && (
@@ -210,6 +211,7 @@ return (
         <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Barrio</label>
             <input
+
             type="text"
             placeholder="Ej: Chapinero"
             value={barrio}
@@ -245,6 +247,7 @@ return (
         <div className="flex-1">
             <label className="block text-xs text-gray-600 mb-1">Longitud</label>
             <input
+
             type="text"
             placeholder="0.000000"
             value={longitud}
@@ -256,6 +259,7 @@ return (
             type="button"
             onClick={() => setShowMap(true)}
             className="flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition shadow-md font-medium"
+
         >
             <FaMapMarkerAlt /> Seleccionar en mapa
         </button>
@@ -296,6 +300,7 @@ return (
             multiple
             onChange={handleFileChange}
             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+
         />
         <div className="text-center">
             <FaPlus className="text-blue-600 text-3xl mx-auto mb-2" />
@@ -327,15 +332,20 @@ return (
                 </div>
                 </div>
                 <p className="text-xs text-gray-500 truncate">{file.name}</p>
+
             </div>
             ))}
         </div>
+        )}
+        {imageFiles.length === 0 && (
+        <p className="text-sm text-gray-500 mt-2 text-center">No hay imágenes seleccionadas</p>
         )}
     </div>
 
     <button
         onClick={handleSubmit}
         className="w-full px-6 py-4 bg-gradient-to-r from-green-600 to-green-700 text-white font-bold text-lg rounded-xl hover:from-green-700 hover:to-green-800 transition shadow-xl hover:shadow-2xl transform hover:scale-[1.02] flex items-center justify-center gap-3"
+
     >
         <FaSave className="text-xl" /> Publicar Apartamento
     </button>

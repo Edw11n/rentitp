@@ -92,6 +92,7 @@ function ApartmentList({ searchTerm = "" }) {
   };
 
   const openImageModal = (images, currentIndex = 0) => {
+
     if (!images || images.length === 0) return;
     const imageArray = typeof images === 'string' ? images.split(",") : images;
     setModalImages(imageArray);
@@ -303,6 +304,7 @@ function ApartmentList({ searchTerm = "" }) {
                     </button>
                   </div>
                 </div>
+
               </div>
             );
           })}

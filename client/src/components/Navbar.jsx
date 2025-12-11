@@ -26,6 +26,7 @@ return (
         onClick={handleTitleClick}
     >
         RentUp
+
     </h1>
 
     {!user ? (

@@ -16,10 +16,19 @@ const useManageController = () => {
         info_add_apt: "",
         images: []
     });
+    const [toast, setToast] = useState(null);
+
+    const showToast = (message, type = 'success') => {
+        setToast({ message, type });
+    };
+
+    const closeToast = () => {
+        setToast(null);
+    };
 
     const fetchApartments = () => {
         if (!user || !user.id) {
-            alert("El usuario no ha iniciado sesión.");
+            showToast("El usuario no ha iniciado sesión", "error");
             return;
         }
         setLoading(true);
@@ -66,14 +75,14 @@ const useManageController = () => {
                 }
             })
             .then(() => {
-                alert("Apartamento eliminado exitosamente");
+                showToast("Apartamento eliminado exitosamente", "success");
                 setApartmentList((prevList) =>
                     prevList.filter((apartment) => apartment.id_apt !== id_apt)
                 );
             })
             .catch((error) => {
                 console.error("Error eliminando apartamento:", error);
-                alert("Hubo un problema al eliminar el apartamento");
+                showToast("Hubo un problema al eliminar el apartamento", "error");
             });
         }
     };
@@ -87,7 +96,7 @@ const useManageController = () => {
         if (!editFormData.info_add_apt) missingFields.push("Información adicional");
 
         if (missingFields.length > 0) {
-            alert(`Por favor rellena los siguientes campos: ${missingFields.join(", ")}`);
+            showToast(`Por favor rellena los siguientes campos: ${missingFields.join(", ")}`, "warning");
             return;
         }
 
@@ -118,13 +127,13 @@ const useManageController = () => {
             },
         })
         .then(() => {
-            alert("Apartamento actualizado exitosamente");
+            showToast("Apartamento actualizado exitosamente", "success");
             fetchApartments();
             setEditApartmentId(null);
         })
         .catch((error) => {
             console.error("Error actualizando apartamento:", error);
-            alert("Hubo un problema al actualizar el apartamento");
+            showToast("Hubo un problema al actualizar el apartamento", "error");
         });
     };
 
@@ -139,11 +148,14 @@ const useManageController = () => {
         editApartmentId,
         setEditApartmentId,
         editFormData,
+        setEditFormData,
         handleEditClick,
         handleInputChange,
         handleDelete,
         handleUpdate,
         handleCancelEdit,
+        toast,
+        closeToast,
     };
 };
 
