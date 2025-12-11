@@ -54,6 +54,16 @@ function ApartmentList({ searchTerm = "" }) {
     }
   };
 
+  // Filtrar apartamentos según búsqueda
+  const filteredApartments = apartmentList.filter((apt) => {
+    if (!searchTerm) return true;
+    const searchLower = searchTerm.toLowerCase();
+    return (
+      apt.barrio?.toLowerCase().includes(searchLower) ||
+      apt.direccion_apt?.toLowerCase().includes(searchLower)
+    );
+  });
+
   // Auto-avanzar carrusel para todos los apartamentos
   useEffect(() => {
     const intervals = filteredApartments.map((apartment) => {
@@ -75,7 +85,7 @@ function ApartmentList({ searchTerm = "" }) {
     }).filter(Boolean);
 
     return () => intervals.forEach(interval => clearInterval(interval));
-  }, [apartmentList]);
+  }, [filteredApartments]);
 
   const handleCarouselPrev = (aptId, imagesLength) => {
     setCarouselIndexes((prev) => ({
@@ -125,16 +135,6 @@ function ApartmentList({ searchTerm = "" }) {
     setShowChat(false);
     setSelectedLessor(null);
   };
-
-  // Filtrar apartamentos según búsqueda
-  const filteredApartments = apartmentList.filter((apt) => {
-    if (!searchTerm) return true;
-    const searchLower = searchTerm.toLowerCase();
-    return (
-      apt.barrio?.toLowerCase().includes(searchLower) ||
-      apt.direccion_apt?.toLowerCase().includes(searchLower)
-    );
-  });
 
   return (
     <div className="h-full">

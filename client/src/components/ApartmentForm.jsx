@@ -170,8 +170,7 @@ const handleSelectLocation = async ({ lat, lng }) => {
             
             const fullAddress = addressParts.length > 0 ? addressParts.join(', ') : data.display_name;
             
-            // Actualizar los campos
-            if (neighbourhood) setBarrio(neighbourhood);
+            // Actualizar solo el campo de dirección, no el barrio
             if (fullAddress) setDireccion(fullAddress);
         }
     } catch (error) {
