@@ -34,7 +34,7 @@ return (
         <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-full mb-4 shadow-lg">
             <FontAwesomeIcon icon={faHome} className="text-white text-2xl" />
         </div>
-        <h2 className="text-3xl font-bold text-gray-800 mb-2">¡Bienvenido a RentITP!</h2>
+        <h2 className="text-3xl font-bold text-gray-800 mb-2">¡Bienvenido a RentUp!</h2>
         <p className="text-gray-500 text-sm">Encuentra tu hogar ideal o gestiona tus propiedades</p>
         </div>
 

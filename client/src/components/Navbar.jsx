@@ -25,7 +25,7 @@ return (
         className="text-white text-2xl font-semibold cursor-pointer tracking-tight transition hover:-translate-y-1 hover:shadow-md"
         onClick={handleTitleClick}
     >
-        RentITP
+        RentUp
     </h1>
 
     {!user ? (
