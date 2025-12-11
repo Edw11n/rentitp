@@ -1,11 +1,18 @@
 import React, { useState } from "react";
 import ApartmentForm from "../components/ApartmentForm";
 import Manage from '../components/Manage';
+import Toast from '../components/Toast';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faList, faChartLine } from '@fortawesome/free-solid-svg-icons';
 
 function Dashboard() {
   const [activeTab, setActiveTab] = useState('list'); // 'add', 'list', 'stats'
+  const [showSuccessToast, setShowSuccessToast] = useState(false);
+
+  const handleApartmentAdded = () => {
+    setShowSuccessToast(true);
+    setActiveTab('list');
+  };
 
   return (
     <div className="min-h-[calc(100vh-82px)] bg-gradient-to-br from-indigo-50 via-white to-purple-50">
@@ -62,11 +69,20 @@ function Dashboard() {
                 <h1 className="text-3xl font-bold text-gray-900">Añadir Nuevo Apartamento</h1>
                 <p className="text-gray-600 mt-1">Completa la información para publicar tu propiedad</p>
               </div>
-              <ApartmentForm />
+              <ApartmentForm onApartmentAdded={handleApartmentAdded} />
             </div>
           </div>
         )}
       </div>
+
+      {/* Notificación de apartamento añadido */}
+      {showSuccessToast && (
+        <Toast 
+          message="¡Apartamento añadido exitosamente!" 
+          type="success" 
+          onClose={() => setShowSuccessToast(false)} 
+        />
+      )}
     </div>
   );
 }

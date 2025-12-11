@@ -2,9 +2,9 @@ import Axios from 'axios';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
-export const googleLogin = async ({ token, login }) => {
+export const googleLogin = async ({ token, login, rolId = 1 }) => {
     try {
-        const response = await Axios.post(`${API_URL}/auth/google`, { token });
+        const response = await Axios.post(`${API_URL}/auth/google`, { token, rolId });
 
         const { user, token: accessToken } = response.data;
         const { user_id, user_name, user_lastname, user_email, user_phonenumber, rol_id } = user;

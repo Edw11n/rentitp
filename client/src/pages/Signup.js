@@ -64,28 +64,38 @@ function Signup() {
         navigate('/login');
     }
     // Login con Google
-        const handleGoogleLogin = async (credentialResponse) => {
-            try {
-                const {credential} = credentialResponse;
-                if (!credential) {
-                    console.error('No se recibio el token de google');
-                    return;
-                }
-                const decoded = jwtDecode(credential);
-                console.log('Token decodificado:', decoded);
-    
-                const result = await googleLogin({ token: credential, login });
-                if (result.success) {
-                    console.log('Login exitoso');
-                    goToHome();
-                } else {
-                    setMessage(result.message);
-                }
-            } catch (error) {
-                console.error('Error en el login con Google:', error);
-                setMessage('Error en el login con Google');
+    const handleGoogleLogin = async (credentialResponse) => {
+        try {
+            // Verificar que se haya seleccionado un tipo de usuario
+            if (!userType) {
+                setError(true);
+                setMessage("Por favor selecciona un tipo de usuario antes de continuar con Google");
+                return;
             }
+
+            const {credential} = credentialResponse;
+            if (!credential) {
+                console.error('No se recibio el token de google');
+                return;
+            }
+            const decoded = jwtDecode(credential);
+            console.log('Token decodificado:', decoded);
+
+            // Asignar rol según el tipo de usuario seleccionado
+            let rolId = userType === "usuario" ? 1 : 2;
+
+            const result = await googleLogin({ token: credential, login, rolId });
+            if (result.success) {
+                console.log('Login exitoso');
+                goToHome();
+            } else {
+                setMessage(result.message);
+            }
+        } catch (error) {
+            console.error('Error en el login con Google:', error);
+            setMessage('Error en el login con Google');
         }
+    }
     return (
         <div className="container">
             <button className="exit-icon" onClick={goToHome} aria-label="Volver al inicio">
@@ -120,6 +130,36 @@ function Signup() {
                 <div className="title">
                     <h2>Crea tu cuenta</h2>
                     <p className="subtitle">Únete a nuestra comunidad de estudiantes y propietarios</p>
+                </div>
+
+                <div className="role-selector-header">
+                    <h3>Selecciona tu tipo de cuenta</h3>
+                </div>
+
+                <div className="role-selector">
+                    <div 
+                        className={`role-card ${userType === 'usuario' ? 'selected' : ''}`}
+                        onClick={() => setUserType('usuario')}
+                    >
+                        <div className="role-icon">
+                            <FontAwesomeIcon icon={faUser} />
+                        </div>
+                        <h3>Usuario</h3>
+                        <p>Busco alojamiento cerca de mi universidad</p>
+                        {userType === 'usuario' && <div className="selected-badge">✓ Seleccionado</div>}
+                    </div>
+                    
+                    <div 
+                        className={`role-card ${userType === 'arrendador' ? 'selected' : ''}`}
+                        onClick={() => setUserType('arrendador')}
+                    >
+                        <div className="role-icon">
+                            <FontAwesomeIcon icon={faUserTie} />
+                        </div>
+                        <h3>Arrendador</h3>
+                        <p>Ofrezco alojamiento para estudiantes</p>
+                        {userType === 'arrendador' && <div className="selected-badge">✓ Seleccionado</div>}
+                    </div>
                 </div>
 
                 <div className="google-login-container">
@@ -189,36 +229,6 @@ function Signup() {
                             onChange={(e) => setConfirmPassword(e.target.value)} 
                             placeholder="••••••••"
                         />
-                    </div>
-                </div>
-                
-                <div className="role-selector-header">
-                    <h3>Selecciona tu tipo de cuenta</h3>
-                </div>
-
-                <div className="role-selector">
-                    <div 
-                        className={`role-card ${userType === 'usuario' ? 'selected' : ''}`}
-                        onClick={() => setUserType('usuario')}
-                    >
-                        <div className="role-icon">
-                            <FontAwesomeIcon icon={faUser} />
-                        </div>
-                        <h3>Usuario</h3>
-                        <p>Busco alojamiento cerca de mi universidad</p>
-                        {userType === 'usuario' && <div className="selected-badge">✓ Seleccionado</div>}
-                    </div>
-                    
-                    <div 
-                        className={`role-card ${userType === 'arrendador' ? 'selected' : ''}`}
-                        onClick={() => setUserType('arrendador')}
-                    >
-                        <div className="role-icon">
-                            <FontAwesomeIcon icon={faUserTie} />
-                        </div>
-                        <h3>Arrendador</h3>
-                        <p>Ofrezco alojamiento para estudiantes</p>
-                        {userType === 'arrendador' && <div className="selected-badge">✓ Seleccionado</div>}
                     </div>
                 </div>
                 

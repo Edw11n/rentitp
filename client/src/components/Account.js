@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGear } from "@fortawesome/free-solid-svg-icons";
 
-function Account({ onClose }) {
+function Account({ onClose, onLogoutSuccess }) {
     const navigate = useNavigate();
     const { user, logout } = useContext(UserContext);
     const [showConfirmLogout, setShowConfirmLogout] = useState(false);
@@ -16,7 +16,12 @@ function Account({ onClose }) {
     const goToConfigAccount = () => { navigate('/my-account'); onClose(); };
     const goToDashboard = () => { navigate('/dashboard'); onClose(); };
     const handleLogoutClick = () => setShowConfirmLogout(true);
-    const confirmLogout = () => { logout(); setShowConfirmLogout(false); navigate('/'); };
+    const confirmLogout = () => { 
+        logout(); 
+        setShowConfirmLogout(false); 
+        navigate('/'); 
+        if (onLogoutSuccess) onLogoutSuccess();
+    };
     const cancelLogout = () => setShowConfirmLogout(false);
 
     const handleOutsideClick = (event) => {
@@ -29,14 +34,15 @@ function Account({ onClose }) {
     const firstName = (user.nombre || '').split(' ')[0] || '';
 
     return (
-        // overlay transparente: captura clicks fuera para cerrar, pero no oscurece la app
-        <div
-            className="account-overlay fixed inset-0 z-50"
-            onClick={handleOutsideClick}
-        >
-            <div className="relative w-full h-full">
-                {/* Popup alineado al lado superior derecho (similar al menú de cuenta de Gmail) */}
-                <div className="absolute top-14 right-6 w-80 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
+        <>
+            {/* overlay transparente: captura clicks fuera para cerrar, pero no oscurece la app */}
+            <div
+                className="account-overlay fixed inset-0 z-50"
+                onClick={handleOutsideClick}
+            >
+                <div className="relative w-full h-full">
+                    {/* Popup alineado al lado superior derecho (similar al menú de cuenta de Gmail) */}
+                    <div className="absolute top-14 right-6 w-80 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
                     <div className="p-4">
                         {/* Cabecera: email + close */}
                         <div className="flex items-start justify-between">
@@ -105,32 +111,33 @@ function Account({ onClose }) {
                         )}
 
                     </div>
-
-                    {/* Confirmación de logout — overlay pequeño sobre el popup */}
-                    {showConfirmLogout && (
-                        <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-                            <div className="bg-white p-5 rounded-xl shadow-lg w-64">
-                                <p className="text-center text-gray-700 font-medium">¿Estás seguro de que deseas cerrar sesión?</p>
-                                <div className="flex justify-center gap-4 mt-4">
-                                    <button
-                                        onClick={confirmLogout}
-                                        className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-lg transition"
-                                    >
-                                        Sí
-                                    </button>
-                                    <button
-                                        onClick={cancelLogout}
-                                        className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold px-4 py-2 rounded-lg transition"
-                                    >
-                                        No
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    )}
                 </div>
             </div>
         </div>
+
+        {/* Confirmación de logout — overlay en toda la pantalla */}
+        {showConfirmLogout && (
+            <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-[60]">
+                <div className="bg-white p-6 rounded-2xl shadow-2xl w-80 max-w-md">
+                    <p className="text-center text-gray-700 font-medium text-lg mb-6">¿Estás seguro de que deseas cerrar sesión?</p>
+                    <div className="flex justify-center gap-4">
+                        <button
+                            onClick={confirmLogout}
+                            className="bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-2 rounded-lg transition"
+                        >
+                            Sí
+                        </button>
+                        <button
+                            onClick={cancelLogout}
+                            className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold px-6 py-2 rounded-lg transition"
+                        >
+                            No
+                        </button>
+                    </div>
+                </div>
+            </div>
+        )}
+    </>
     );
 }
 
